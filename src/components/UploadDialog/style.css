@@ -1,0 +1,106 @@
+.upload-container{
+  min-width: 430px;
+  position: relative;
+}
+.upload-container .upload-wrapper{
+  position: relative;
+  height: 300px;
+  width: 100%;
+  border-radius: 10px;
+  background: #fff;
+  border: 2px dashed #c2cdda;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+.upload-wrapper.active{
+  border: none;
+}
+.upload-wrapper .image{
+  position: absolute;
+  height: 100%;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.upload-wrapper img{
+  height: 100%;
+  width: 100%;
+  object-fit: cover;
+}
+.upload-wrapper .icon{
+  font-size: 100px;
+  color: #9658fe;
+}
+.upload-wrapper .upload-text{
+  font-size: 20px;
+  font-weight: 500;
+  color: #5B5B7B;
+  z-index: 2;
+}
+.upload-wrapper #upload-cancel-btn{
+  position: absolute;
+  font-size: 20px;
+  right: 15px;
+  top: 15px;
+  color: #9658fe;
+  cursor: pointer;
+  display: none;
+  width: 40px;
+  height: 40px;
+}
+.upload-wrapper.active:hover #upload-cancel-btn{
+  display: block;
+}
+.upload-wrapper #upload-cancel-btn:hover{
+  color: #e74c3c;
+  font-weight: 600;
+}
+.upload-wrapper .upload-file-name{
+  position: absolute;
+  bottom: 0px;
+  width: 100%;
+  padding: 8px 0;
+  font-size: 18px;
+  color: #fff;
+  display: none;
+  background: linear-gradient(135deg,#3a8ffe 0%,#9658fe 100%);
+}
+.upload-wrapper.active:hover .upload-file-name{
+  display: block;
+}
+.upload-container #upload-custom-btn{
+  margin-top: 30px;
+  display: block;
+  flex-grow: 1;
+  height: 50px;
+  border: none;
+  outline: none;
+  border-radius: 25px;
+  color: #fff;
+  font-size: 18px;
+  font-weight: 500;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  cursor: pointer;
+  background: linear-gradient(135deg,#3a8ffe 0%,#9658fe 100%);
+}
+
+.upload-container #upload-accept-btn{
+  margin-top: 30px;
+  display: block;
+  height: 50px;
+  border: none;
+  flex-grow: 1;
+  outline: none;
+  border-radius: 25px;
+  color: #fff;
+  font-size: 18px;
+  font-weight: 500;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  cursor: pointer;
+  background: linear-gradient(135deg,#48f0e2 0%,#35a350 100%);
+}
