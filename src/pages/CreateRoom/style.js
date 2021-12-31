@@ -1,7 +1,6 @@
 import { styled } from '@mui/material/styles';
 import MuiAppBar from '@mui/material/AppBar';
 import { Button, TextField } from '@mui/material';
-import { borderRadius } from '@mui/system';
 
 const leftDrawer = 240;
 const rightDrawer = 450;
@@ -56,6 +55,7 @@ export const Main = styled('main', { shouldForwardProp: (prop) => prop !== 'open
     ({ theme, open }) => ({
         flexGrow: 1,
         marginTop:80,
+        paddingRight:10,
         transition: theme.transitions.create('margin', {
             easing: theme.transitions.easing.sharp,
             duration: theme.transitions.duration.leavingScreen,
