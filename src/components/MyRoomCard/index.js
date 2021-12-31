@@ -9,7 +9,7 @@ import RoomDetails from '../RoomDetails';
 import PasswordFormDialog from '../InputRoomPass';
 import { userRoom } from '../../mockData/TestData';
 
-const RoomCard = (props) => {
+const MyRoomCard = (props) => {
     // handle Share button
     const [anchorEl, setAnchorEl] = React.useState(null);
     const handleShare_Open = (event) => {
@@ -23,9 +23,6 @@ const RoomCard = (props) => {
     const [openDialog, setOpenDialog] = React.useState(false);
     const { avtSrc, roomName, hostName, desImg, currentUser, maxUser } = props;
 
-    // for enter room password
-    const [openPassForm, setOpenPassForm] = React.useState(false);
-
     const classes = useStyles();
     return (
         <Card
@@ -36,46 +33,47 @@ const RoomCard = (props) => {
             }}
         >
             <CardHeader
-                avatar={
-                    <Avatar
-                        sx={classes.avt}
-                        src={avtSrc}
-                    />
-                }
-                action={
-                    <Box>
-                        <IconButton
-                            onClick={handleShare_Open}
-                        >
-                            <ShareIcon
-                                sx={classes.icon}
-                            />
-                        </IconButton>
-                        <StyledMenu
-                            anchorEl={anchorEl}
-                            open={Boolean(anchorEl)}
-                            onClose={handleShare_Close}
-                        >
-                            <MenuItem onClick={handleShare_Close}>
-                                Get URL
-                            </MenuItem>
-                            <MenuItem onClick={handleShare_Close} disableRipple>
-                                Get Code
-                            </MenuItem>
-                        </StyledMenu>
-                    </Box>
-                }
-                title={roomName}
-                subheader={
-                    <Typography variant='subtitle2' color='primary'>{hostName}</Typography>
-                }
                 sx={classes.cardHeader}
+                title={
+                    <Typography 
+                        variant='subtitle2'
+                        sx={{
+                            padding: '5px 10px',
+                            border: '1px white',
+                            borderRadius: '20px',
+                            backgroundColor: 'rgba(0, 0, 0, 0.6)',
+                        }}
+                    >
+                        {roomName}
+                    </Typography>
+                }
             />
+            <Box sx={classes.cardSharingAction}>
+                <IconButton
+                    onClick={handleShare_Open}
+                >
+                    <ShareIcon
+                        fontSize='small'
+                        sx={classes.icon}
+                    />
+                </IconButton>
+                <StyledMenu
+                    anchorEl={anchorEl}
+                    open={Boolean(anchorEl)}
+                    onClose={handleShare_Close}
+                >
+                    <MenuItem onClick={handleShare_Close}>
+                        Get URL
+                    </MenuItem>
+                    <MenuItem onClick={handleShare_Close} disableRipple>
+                        Get Code
+                    </MenuItem>
+                </StyledMenu>
+            </Box>
             <CardMedia
                 style={classes.media}
                 image={desImg}
             />
-
             <CardActions
                 sx={classes.cardAction}
             >
@@ -87,7 +85,7 @@ const RoomCard = (props) => {
                     disableElevation
                     size='medium'
                     onClick={() => {
-                        setOpenPassForm(true);
+                        console.log('click');
                     }}>
                     Join room
                 </Button>
@@ -101,17 +99,12 @@ const RoomCard = (props) => {
             <RoomDetailsDialog
                 openDialog={openDialog}
                 setOpenDialog={setOpenDialog}
-                setOpenPassForm={setOpenPassForm}
                 title={roomName}
             >
                 <RoomDetails hostName={userRoom.hostName} roomID={userRoom.roomID} images={userRoom.images} description={userRoom.description} />
             </RoomDetailsDialog>
-            <PasswordFormDialog
-                open={openPassForm}
-                setOpen={setOpenPassForm}
-            />
         </Card>
     );
 };
 
-export default RoomCard
+export default MyRoomCard;

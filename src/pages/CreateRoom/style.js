@@ -49,18 +49,18 @@ export const CreateButton = styled(Button)({
     backgroundColor: 'transparent',
     border: 'solid 2px #3DDB84',
     borderRadius: '20px',
-    margin: '18px' 
+    margin: '18px'
 });
 
 export const Main = styled('main', { shouldForwardProp: (prop) => prop !== 'open' })(
     ({ theme, open }) => ({
         flexGrow: 1,
-        marginTop:80,
+        marginTop: 80,
         transition: theme.transitions.create('margin', {
             easing: theme.transitions.easing.sharp,
             duration: theme.transitions.duration.leavingScreen,
         }),
-        marginLeft: `-${leftDrawer-50}px`,
+        marginLeft: `-${leftDrawer - 50}px`,
         ...(open && {
             transition: theme.transitions.create('margin', {
                 easing: theme.transitions.easing.easeOut,
@@ -123,6 +123,25 @@ export const useStyles = () => ({
             width: rightDrawer,
             boxSizing: 'border-box',
             backgroundColor: '#001E3C',
+            overflowY: 'auto',
+            margin: 0,
+            padding: 0,
+            listStyle: "none",
+            height: "100%",
+            '&::-webkit-scrollbar': {
+                width: '0.4em'
+            },
+            '&::-webkit-scrollbar-track': {
+                boxShadow: 'inset 0 0 6px rgba(0,0,0,0.00)',
+                webkitBoxShadow: 'inset 0 0 6px rgba(0,0,0,0.00)'
+            },
+            '&::-webkit-scrollbar-thumb': {
+                backgroundColor: '#0f253b',
+                borderRadius: '10px',
+            },
+            '&::-webkit-scrollbar-thumb:hover': {
+                backgroundColor: '#132F4C',
+            }
         },
     },
     drawerHeaderDivider: {
@@ -211,6 +230,7 @@ export const useStyles = () => ({
         margin: '0px 0px 13px',
         display: 'flex',
         alignItems: 'center',
+        padding: '0px 5px'
     },
     iconWhite: {
         color: 'white',

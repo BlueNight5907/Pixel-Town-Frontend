@@ -11,7 +11,7 @@ import Slider from '@mui/material/Slider';
 import EmojiPeopleIcon from '@mui/icons-material/EmojiPeople';
 
 const CreateRoomDrawer = (props) => {
-    const { open, setClose} = props;
+    const { open, setClose, templateId, name, description, tags } = props;
 
     const classes = useStyles();
     return (
@@ -92,6 +92,14 @@ const CreateRoomDrawer = (props) => {
                         max={50}
                     />
                 </Box>
+                <Typography variant='subtitle1' sx={classes.lowLightText}>
+                    <b>Describe your room:</b>
+                </Typography>
+                <InputField
+                    id="outlined-required"
+                    label="Description"
+                    multiline
+                />
                 <Typography variant='subtitle1' sx={classes.lowLightText}>
                     <b>Set a password: (optional)</b>
                 </Typography>

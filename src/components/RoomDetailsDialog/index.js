@@ -10,7 +10,7 @@ import { useStyles } from './style';
 import { Divider, Paper } from '@mui/material';
 
 const RoomDetailsDialog = (props) => {
-    const { title, children, openDialog, setOpenDialog } = props;
+    const { title, children, openDialog, setOpenDialog, setOpenPassForm } = props;
 
     const handleClose = () => {
         setOpenDialog(false);
@@ -25,29 +25,36 @@ const RoomDetailsDialog = (props) => {
             open={openDialog}
             sx={classes.root}
             PaperProps={{sx:{
-                borderRadius:5,
+                borderRadius:2,
                 backgroundColor:"transparent"
             }}}
         >
             <Paper sx={classes.paperRoot}>
-                <DialogTitle>
+                <DialogTitle sx={classes.dialogTitle}>
                     {title}
                     <IconButton onClick={handleClose} sx={classes.closeIcon}>
                         <CloseIcon />
                     </IconButton>
                 </DialogTitle>
                 <Divider variant='middle' />
-                <DialogContent>
+                <DialogContent sx={classes.dialogContent}>
                     {children}
                 </DialogContent>
                 <DialogActions>
-                    <Button sx={{
+                    <Button 
+                    size='large'
+                    sx={{
                         minWidth:150,
                         borderRadius:5,
                         "&:hover":{
                             color:theme => theme.main.btnColor
                         }
-                    }} autoFocus onClick={handleClose}>
+                    }} autoFocus onClick={
+                        () => {
+                            handleClose();
+                            //setOpenPassForm(true);
+                        }
+                    }>
                         Join
                     </Button>
                 </DialogActions>
