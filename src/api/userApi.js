@@ -8,3 +8,13 @@ export const loginApi = (user) => {
     const path = "/login"
     return instance.post(path, user)
 }
+
+export const getUser = (id) => {
+    const path = "/account/user/"+id
+    return instance.get(path)
+}
+
+export const logoutApi = (user) => {
+    const path = "/logout"
+    return instance.post(path)
+}

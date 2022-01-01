@@ -17,16 +17,16 @@ export const userRoom = {
 
 export const templates = [
     {
-        id: '0',
+        id: 1,
         type: 'Office',
         templateRooms: [
             {
-                tid:'1',
+                tid:2,
                 name:'Office 1',
                 src:'https://i.pinimg.com/originals/e0/8d/cd/e08dcd4401a0015a31b593738031f5b0.png',
                 des:'Aenean lacinia bibendum nulla sed consectetur. Praesent commodo cursus magna. Donec sed odio dui. Donec ullamcorper nulla non metus auctor fringilla.',
                 min: 1,
-                max: 50,
+                max: 25,
                 tags: [
                     {
                         tag: 'Executive offices',
@@ -40,29 +40,51 @@ export const templates = [
                 ]
             },
             {
-                tid:'2',
+                tid:2,
                 name:'Office 2',
                 src:'https://media.sketchfab.com/models/9363665ee7b94a16b6aba18a89d70be9/thumbnails/b5c7bc7d6dfe496fac3463b45e535ef8/b4b17aa65e68425ab4aea8db1f136202.jpeg',
                 des:'Aenean lacinia bibendum nulla sed consectetur. Praesent commodo cursus magna. Donec sed odio dui. Donec ullamcorper nulla non metus auctor fringilla.',
                 min: 1,
+                max: 25,
+                tags: [
+                    {
+                        tag: 'Park',
+                    },
+                    {
+                        tag: 'Firework',
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        id: '1',
+        type: 'Seasonal',
+        templateRooms: [
+            {
+                tid:3,
+                name:'Seasonal 1',
+                src:'https://dienthoaivui.com.vn/wp-content/uploads/2020/10/hinh-nen-iphone-12-19-scaled.jpg',
+                des:'Good for large people',
+                min: 1,
                 max: 50,
                 tags: [
                     {
-                        tag: 'Executive offices',
+                        tag: 'Alot of trees',
                     },
                     {
                         tag: 'Meeting spaces',
                     },
                     {
-                        tag: 'Home sofa',
+                        tag: 'Street',
                     },
                 ]
             },
             {
-                tid:'3',
-                name:'Office 3',
-                src:'https://i.pinimg.com/originals/a3/e3/53/a3e353ce86e9f24a22d40508c9758257.jpg',
-                des:'Aenean lacinia bibendum nulla sed consectetur. Praesent commodo cursus magna. Donec sed odio dui. Donec ullamcorper nulla non metus auctor fringilla.',
+                tid:4,
+                name:'Seasonal 2',
+                src:'https://1.bp.blogspot.com/-EhWw8jF-c3I/XU-pn4RGGYI/AAAAAAAAA-U/3DIjFAXcu4kBWSg2GduhCe1Ym_A-AdFCgCLcBGAs/s1600/Kotizon-bo-suu-tap-hinh-nen-danh-cho-laptop-cuc-net-full-hd-1.jpg',
+                des:'Something need to be done together',
                 min: 1,
                 max: 50,
                 tags: [
@@ -78,10 +100,6 @@ export const templates = [
                 ]
             }
         ]
-    },
-    {
-        id: '1',
-        type: 'Seasonal'
     },
     {
         id: '2',
@@ -106,5 +124,5 @@ export const templates = [
     {
         id: '7',
         type: 'Blank'
-    },
+    }
 ];

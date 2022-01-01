@@ -53,7 +53,8 @@ function Character({name,onSelect, index, selected}){
         height:"fit-content",
         borderRadius:1,
         color:index===selected?"#fff":"#000",
-        width:"78px"
+        width:"78px",
+        cursor:"pointer"
     }
     return(
         <Box sx={styles} onClick={ ()=> onSelect&&onSelect(index)}>
