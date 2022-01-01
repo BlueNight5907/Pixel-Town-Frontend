@@ -8,9 +8,10 @@ import IconButton from '@mui/material/IconButton';
 import CloseIcon from '@mui/icons-material/Close';
 import { useStyles } from './style';
 import { Divider, Paper } from '@mui/material';
+import { Link } from 'react-router-dom';
 
 const RoomDetailsDialog = (props) => {
-    const { title, children, openDialog, setOpenDialog } = props;
+    const { title, children, openDialog, setOpenDialog , Id} = props;
 
     const handleClose = () => {
         setOpenDialog(false);
@@ -47,7 +48,7 @@ const RoomDetailsDialog = (props) => {
                         "&:hover":{
                             color:theme => theme.main.btnColor
                         }
-                    }} autoFocus onClick={handleClose}>
+                    }} autoFocus onClick={handleClose}  component={Link} to={`/room/join/${Id}`} >
                         Join
                     </Button>
                 </DialogActions>

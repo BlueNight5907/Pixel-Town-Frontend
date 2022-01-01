@@ -1,8 +1,10 @@
 import { GET_MY_ROOMS_REQUEST, GET_MY_ROOMS_SUCCESS, GET_MY_ROOMS_FAILED,
 GET_WORLD_ROOMS_REQUEST, GET_WORLD_ROOMS_SUCCESS,GET_WORLD_ROOMS_FAILED,
-DELETE_ROOM_REQUEST, DELETE_ROOM_FAILED, DELETE_ROOM_SUCCESS } from "../types/Room";
+DELETE_ROOM_REQUEST, DELETE_ROOM_FAILED, DELETE_ROOM_SUCCESS, CREATE_ROOM_FAILED,CREATE_ROOM_REQUEST,CREATE_ROOM_SUCCESS} from "../types/Room";
 const initialState = {
-  myRooms:[],
+  allSpaces:[],
+  joinedSpaces:[],
+  createdSpaces:[],
   worldRooms:[],
   loadingMyRooms: false,
   loadingWorldRoom:false,
@@ -21,13 +23,18 @@ const roomReducer = (state = initialState, action) => {
     case GET_MY_ROOMS_REQUEST:
       return {
         ...state,
+        allSpaces:[],
+        joinedSpaces:[],
+        createdSpaces:[],
         loadingMyRooms:true
       }
     case GET_MY_ROOMS_SUCCESS:
       return {
         ...state,
         loadingMyRooms:false,
-        myRooms: payload.data
+        allSpaces: payload.data.allSpaces,
+        createdSpaces:payload.data.createdSpaces,
+        joinedSpaces:payload.data.joinedSpaces
       }
     case GET_MY_ROOMS_FAILED:
       return {
@@ -38,6 +45,7 @@ const roomReducer = (state = initialState, action) => {
     case GET_WORLD_ROOMS_REQUEST:
       return {
         ...state,
+        worldRooms:[],
         loadingWorldRooms:true
       }
     case GET_WORLD_ROOMS_SUCCESS:
@@ -68,6 +76,22 @@ const roomReducer = (state = initialState, action) => {
         ...state,
         loadingDeleteRoom:false,
         myRooms:payload.error
+      }
+    case CREATE_ROOM_REQUEST:
+      return {
+        ...state,
+        loadingCreateRoom:true
+      }
+    case CREATE_ROOM_SUCCESS:
+      return {
+        ...state,
+        loadingCreateRoom:true
+      }
+    case CREATE_ROOM_FAILED:
+      return {
+        ...state,
+        loadingCreateRoom:false,
+        errorLoadingCreateRoom:payload.error
       }
     default:
       return state;

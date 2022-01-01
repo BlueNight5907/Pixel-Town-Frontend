@@ -60,10 +60,12 @@ function useSignalR(connectionHub) {
                 setSignalR(connection);
             }
             createConnection();
-            if(claim && signalR){
-                signalR.stop()
+            return ()=>{
+                if(signalR){
+                    signalR.stop()
+                    console.log("hello")
+                }
             }
-            return claim = true
         }
     },[signalR,connectionHub])
 

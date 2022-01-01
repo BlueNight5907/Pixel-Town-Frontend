@@ -42,9 +42,10 @@ export default function CreateRoom() {
 
     // Select template item list
     const [selectedIndex, setSelectedIndex] = React.useState('0');
-
+    const [templateSelected, setTemplateSelected] = React.useState(null);
     const handleListItemClick = (event, index) => {
         setSelectedIndex(index);
+
     };
 
     const classes = useStyles();
@@ -85,12 +86,14 @@ export default function CreateRoom() {
                     sx={classes.drawerHeaderDivider}
                 />
                 <List>
-                    {templates.map((template) => (
+                    {templates.map((template,i) => (
                         <ListItemButton
-                            key={template.id}
+                            key={i}
                             selected={selectedIndex === template.id}
                             onClick={(event) => handleListItemClick(event, template.id)}
                             sx={classes.listItemButton}
+                            component={"a"}
+                            href={"#"+template.type}
                         >
                             <ListItemText
                                 className='text'
@@ -103,6 +106,7 @@ export default function CreateRoom() {
             <CreateRoomDrawer // Right drawer
                 open={rightOpen}
                 setClose={handleRightClose}
+                data = {templateSelected}
             />
             <Main open={leftOpen}>
                 <Button
@@ -118,12 +122,11 @@ export default function CreateRoom() {
                 </Typography>
                 {templates.map((template, key) => {
                     const Category = () => (
-                        <Typography my={2} variant='h6' sx={classes.lowLightText}>
+                        <Typography id={template.type} my={2} variant='h6' sx={classes.lowLightText}>
                             <b>{template.type}</b>
                         </Typography>
                     );
                     const { templateRooms } = template;
-                    console.log(templateRooms);
                     return (
                         <Fragment
                             key={key}
@@ -133,7 +136,10 @@ export default function CreateRoom() {
                                 {templateRooms && templateRooms.map((room, index) => {
                                     return (
                                         <TemplateRoomCard
-                                            onClick={handleRightOpen}
+                                            onClick={()=>{
+                                                setTemplateSelected(room)
+                                                handleRightOpen()
+                                            }}
                                             name={room.name}
                                             source={room.src}
                                             description={room.des}

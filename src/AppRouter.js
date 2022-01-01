@@ -20,12 +20,16 @@ function AppRouter() {
                         <UserDashboard/>
                     </UserDashboardLayout>
                 }/>
-
+                <Route path="/explore" element={
+                    <UserDashboardLayout>
+                        <UserDashboard/>
+                    </UserDashboardLayout>
+                }/>
+                <Route path='/room/create' element={<CreateRoom/>}/>
                 <Route path='/room' element={< RoomLayout/>}>
-                <Route path='/room/join' element={<Navigate to="/"/>}/>
+                    <Route path='/room/join' element={<Navigate to="/"/>}/>
                     <Route path='/room/join/:roomId' element={<JoinRoom/>}/>
                     <Route path='/room/create2' element={<CreateRoom2/>}/>
-                    <Route path='/room/create' element={<CreateRoom/>}/>
                     <Route path=":roomId" element={<Room/>}/>
                 </Route>
             </Routes>
