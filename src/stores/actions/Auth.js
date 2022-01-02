@@ -41,7 +41,7 @@ export const login = (form) => {
             console.log("AuthReducer before dispatch: ", stateAfter.authReducer);
 
         } catch (error) {
-            console.log(error)
+            console.log(error.response?.data ? error.response.data : error.message)
             setTimeout(() => {
               dispatch({
                 type: LOGIN_FAIL,

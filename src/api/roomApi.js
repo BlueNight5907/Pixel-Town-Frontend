@@ -17,3 +17,7 @@ export const createRoomApi = (formData)=>{
         'Content-Type': `multipart/form-data; boundary=${form._boundary}`
     }})
 }
+export const joinRoomApi = (roomId,CharacterID)=>{
+    const path = "/room/"+roomId
+    return axiosClient.post(BASE_URL+path,{CharacterID})
+}

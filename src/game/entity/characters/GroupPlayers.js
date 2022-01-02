@@ -7,7 +7,6 @@ export default class GroupPlayers{
         this.sceneGroup = this.scene.add.group()
         this.group = {}
         this.signalR = signalR
-
         signalR.on("AllPlayer", (data)=>{
 
             console.log(data);
@@ -30,7 +29,6 @@ export default class GroupPlayers{
         })
 
         signalR.on("NewUserEntry", (user)=>{
-
             console.log(user);
             if(user.signalrID === signalR.connectionId) return;
             const {character,name,position,signalrID} = user
@@ -75,7 +73,7 @@ export default class GroupPlayers{
 
         signalR.invoke("GetAllPlayer",roomInfor.roomId)
         
-        
+        console.log(signalR)
     }
 
     add(character){

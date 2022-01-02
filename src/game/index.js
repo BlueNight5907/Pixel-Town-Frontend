@@ -11,7 +11,7 @@ function resize(game,container){
     height : container.clientHeight    
   };
   game.scale.setGameSize(size.width, size.height);
-  game.renderer.resize(size.width, size.height); 
+  game.renderer.resize(size.width, size.height);
 }
 
 export default class Game extends React.Component {
@@ -32,12 +32,14 @@ export default class Game extends React.Component {
       const game = new Phaser.Game(config);
       this.doResize = ()=> resize(game,this.gameContainer.current)
       window.addEventListener('resize',this.doResize)
-      game.scene.start('Preload',{signalR:this.props.signalR,data:this.props.data,setRoomId:this.props.setRoomId});
+      game.scene.start('Preload',{signalR:this.props.signalR,data:this.props.data});
       this.game = game;
+      
     }
     componentDidUpdate(){
       if(this.props.signalR === null)
         return
+      console.log("Update")
       const config = {
         ...gameConfig,
         parent: this.gameContainer.current,
@@ -46,7 +48,7 @@ export default class Game extends React.Component {
       const game = new Phaser.Game(config);
       this.doResize = ()=> resize(game,this.gameContainer.current)
       window.addEventListener('resize',this.doResize)
-      game.scene.start('Preload',{signalR:this.props.signalR,data:this.props.data,setRoomId:this.props.setRoomId});
+      game.scene.start('Preload',{signalR:this.props.signalR,data:this.props.data});
       this.game = game;
     }
     shouldComponentUpdate() {
@@ -59,16 +61,16 @@ export default class Game extends React.Component {
     componentWillUnmount(){
         window.removeEventListener('resize',this.doResize)
         if(this.game){
-          this.game.destroy();
+          this.game?.destroy();
         }
-        this.props.signalR.off("Joined");
-        this.props.signalR.off("MyShortMessage");
-        this.props.signalR.off("AllPlayer");
-        this.props.signalR.off("NewUserEntry");
-        this.props.signalR.off("UserOut");
-        this.props.signalR.off("UserMoving");
-        this.props.signalR.off("UserStop");
-        this.props.signalR.off("UserSendShortMessage");
+        this.props.signalR?.off("Joined");
+        this.props.signalR?.off("MyShortMessage");
+        this.props.signalR?.off("AllPlayer");
+        this.props.signalR?.off("NewUserEntry");
+        this.props.signalR?.off("UserOut");
+        this.props.signalR?.off("UserMoving");
+        this.props.signalR?.off("UserStop");
+        this.props.signalR?.off("UserSendShortMessage");
     }
 
     render() {
