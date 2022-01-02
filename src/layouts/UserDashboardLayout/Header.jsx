@@ -7,7 +7,7 @@ import { Link, NavLink, useLocation, useNavigate } from "react-router-dom";
 import useStyles from "./style";
 import bars from "./bars.png"
 import { useDispatch, useSelector } from "react-redux";
-import { BASE_URL } from "../../constants/config";
+import { ASP_APP_FOLDER } from "../../constants/config";
 import { logout } from "../../stores/actions/Auth";
 const headerMenu = [
     {
@@ -234,7 +234,7 @@ const Header = () => {
                             height: 36,
                             bgcolor: '#c792ea'
                         }}
-                        src={currentUser&&currentUser.avatar?BASE_URL+currentUser.avatar:"/assets/users/u36.jfif"}
+                        src={currentUser&&currentUser.avatar?ASP_APP_FOLDER+currentUser.avatar:"/assets/users/u36.jfif"}
                         
                     >
                         {!currentUser&&"UK"}
@@ -336,7 +336,7 @@ const Header = () => {
                             sx={{
                                 flexShrink:0
                             }}
-                            src={currentUser&&currentUser.avatar?BASE_URL+currentUser.avatar:"/assets/users/u36.jfif"}
+                            src={currentUser&&currentUser.avatar?ASP_APP_FOLDER+currentUser.avatar:"/assets/users/u36.jfif"}
                             />
                             <Typography>
                                 {currentUser.name}
