@@ -1,5 +1,6 @@
-import {LOGIN_REQUEST, LOGIN_SUCCESS, LOGIN_FAIL} from "../types/Auth"
-import { loginApi } from "../../api/userApi"
+import {LOGIN_REQUEST, LOGIN_SUCCESS, LOGIN_FAIL, LOGOUT} from "../types/Auth"
+import { loginApi, logoutApi } from "../../api/userApi"
+import { useNavigate } from "react-router-dom";
 export const login = (form) => {
     return async (dispatch, getState) => {
         try{
@@ -40,7 +41,7 @@ export const login = (form) => {
             console.log("AuthReducer before dispatch: ", stateAfter.authReducer);
 
         } catch (error) {
-            console.log(error)
+            console.log(error.response?.data ? error.response.data : error.message)
             setTimeout(() => {
               dispatch({
                 type: LOGIN_FAIL,
@@ -52,4 +53,44 @@ export const login = (form) => {
             
           }
     }
+}
+
+export const getUserInfor = (id) =>{
+  return async(dispatch, getState)=>{
+    try{
+      
+
+  } catch (error) {
+      console.log(error)
+      setTimeout(() => {
+        dispatch({
+          type: LOGIN_FAIL,
+          payload: {
+            error: error.response?.data ? error.response.data : error.message,
+          },
+        });
+      }, 1500);
+      
+    }
+  }
+}
+
+export const logout = () => {
+  return async (dispatch) => {
+      try{
+          //Gọi Api
+          const result = await logoutApi();
+          const data = result.data;
+          console.log(data)
+          localStorage.removeItem(
+            "user"
+          );
+          dispatch({
+            type:LOGOUT
+          })
+
+      } catch (error) {
+          console.log(error)
+        }
+  }
 }

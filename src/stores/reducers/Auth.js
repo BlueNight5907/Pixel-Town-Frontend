@@ -1,6 +1,6 @@
 // Auth Reducer: Phục vụ cho đăng nhập, đăng ký, lưu trữ thông tin user đăng nhập
 
-import { LOGIN_REQUEST, LOGIN_SUCCESS, LOGIN_FAIL, LOGOUT, REGISTER_REQUEST, REGISTER_SUCCESS, REGISTER_FAIL, RESET_ERROR_LOGIN_REGISTER } from '../types/Auth';
+import { LOGIN_REQUEST, LOGIN_SUCCESS, LOGIN_FAIL, LOGOUT, REGISTER_REQUEST, REGISTER_SUCCESS, REGISTER_FAIL, RESET_ERROR_LOGIN_REGISTER, GET_USER_REQUEST, GET_USER_SUCCESS, GET_USER_FAIL } from '../types/Auth';
 
 // lấy thông tin user đã lưu trong local trước đó nếu refesh lại trang hoặc tắt trang
 // cú pháp ? để tránh trường hợp JSON.parse(null sẽ gây lỗi)
@@ -9,6 +9,8 @@ const currentUser = localStorage.getItem("user") ? JSON.parse(localStorage.getIt
 const initialState = {
   currentUser: currentUser,
   loadingLogin: false,
+  loadingUserRequest:false,
+  errorRequest:null,
   errorLogin: null,
   responseRegister: null,
   loadingRegister: false,
@@ -36,6 +38,26 @@ const authReducer = (state = initialState, action) => {
         ...state,
         errorLogin: action.payload.error,
         loadingLogin: false,
+      };
+    }
+
+    case GET_USER_REQUEST: {
+      return { ...state, loadingUserRequest: true, errorRequest: null }; // error: null trong trường error đang báo lỗi, nhấn đăng nhập lại thì cần reset lại không báo lỗi nữa
+    }
+
+    case GET_USER_SUCCESS: {
+      return {
+        ...state,
+        currentUser: action.payload.data,
+        loadingUserRequest: false,
+      };
+    }
+
+    case GET_USER_FAIL: {
+      return {
+        ...state,
+        errorRequest: action.payload.error,
+        loadingUserRequest: false,
       };
     }
 

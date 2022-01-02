@@ -1,26 +1,24 @@
 import { AppBar, Avatar, Menu, MenuItem, Toolbar, Typography, Divider, ListItemIcon, InputBase, Stack, IconButton, Drawer, MenuList, Button, Paper, ListItemAvatar, ListItemText, Collapse, List } from "@mui/material";
-import { AccountCircle, Settings, Logout, Palette, Search, Close, ArrowForwardIos } from '@mui/icons-material';
-import React, { Fragment } from "react";
+import { AccountCircle, Settings, Logout, Search, Close, ArrowForwardIos, VpnKeyRounded } from '@mui/icons-material';
+import React, { Fragment, useEffect } from "react";
 import { Box, styled } from "@mui/system";
 import CustomizedHeaderButton from './CustomizedHeaderButton';
-import { Link, NavLink, useLocation } from "react-router-dom";
+import { Link, NavLink, useLocation, useNavigate } from "react-router-dom";
 import useStyles from "./style";
 import bars from "./bars.png"
+import { useDispatch, useSelector } from "react-redux";
+import { ASP_APP_FOLDER } from "../../constants/config";
+import { logout } from "../../stores/actions/Auth";
 const headerMenu = [
     {
-        name:'Dashboard',
+        name:'Dashboard/My Rooms',
         href:'/',
-        img:'/assets/icons/home.svg',
+        img:'/assets/icons/gamer.png',
     },
     {
         name:'Explore',
         href:'/explore',
         img:'/assets/icons/explore.png',
-    },
-    {
-        name:'My rooms',
-        href:'/myroom',
-        img:'/assets/icons/gamer.png',
     },
     {
         name:'Create room',
@@ -126,8 +124,9 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 const Header = () => {
     const [anchorEl, setAnchorEl] = React.useState(null);
     const [openDrawer, setOpenDrawer] = React.useState(false)
-
-
+    const dispatch = useDispatch();
+    const navigate = useNavigate();
+    const { currentUser} = useSelector((state) => state.authReducer);
     const handleDrawerOpen = () => {
         setOpenDrawer(true);
       };
@@ -145,6 +144,18 @@ const Header = () => {
     const handleMenu_Close = () => {
         setAnchorEl(null);
     }
+    const handleLogout = ()=>{
+        dispatch(logout())
+    }
+
+    useEffect(() => {
+        if(!currentUser){
+            setTimeout(() => {
+                navigate("/login")
+            }, 1000);
+        }
+    }, [currentUser,navigate])
+    
     return (
     <Fragment>
         <AppBar
@@ -176,9 +187,15 @@ const Header = () => {
                         lg:"flex"
                     }
                 }}>
-                    <CustomizedHeaderButton component={Link} to="/explore" variant='text'>Explore</CustomizedHeaderButton>
-                    <CustomizedHeaderButton component={Link} to="/myroom" variant="text" disableElevation>My Rooms</CustomizedHeaderButton>
-                    <CustomizedHeaderButton component={Link} to="/room/create" variant="text" disableElevation>Create Room</CustomizedHeaderButton>
+                    <CustomizedHeaderButton component={NavLink} to="/explore" 
+                    style={({isActive})=>({backgroundColor: isActive?'#717CB470':"inherit"})}
+                    variant='text'>Explore</CustomizedHeaderButton>
+                    <CustomizedHeaderButton component={NavLink} to="/" 
+                    style={({isActive})=>({backgroundColor: isActive?'#717CB470':"inherit"})}
+                    variant="text" disableElevation>My Rooms</CustomizedHeaderButton>
+                    <CustomizedHeaderButton component={NavLink} 
+                    style={({isActive})=>({backgroundColor: isActive?'#717CB470':"inherit"})}
+                    to="/room/create" variant="text" disableElevation>Create Room</CustomizedHeaderButton>
                 </Stack>
                 <SearchBar sx={{
                     display:{
@@ -209,7 +226,7 @@ const Header = () => {
                             }
                         }}
                     >
-                        Nguyen Huynh Tat Dat
+                        {currentUser?currentUser.name:"Unknown"}
                     </Typography>
                     <Avatar
                         sx={{
@@ -217,8 +234,10 @@ const Header = () => {
                             height: 36,
                             bgcolor: '#c792ea'
                         }}
+                        src={currentUser&&currentUser.avatar?ASP_APP_FOLDER+currentUser.avatar:"/assets/users/u36.jfif"}
+                        
                     >
-                        TD
+                        {!currentUser&&"UK"}
                     </Avatar>
                 </CustomizedHeaderButton>
                 
@@ -251,17 +270,11 @@ const Header = () => {
                     transformOrigin={{ horizontal: 'left', vertical: 'top' }}
                     anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
                 >
-                    <MenuItem>
+                    <MenuItem component={Link} to="/me">
                         <ListItemIcon>
                             <AccountCircle fontSize="small" />
                         </ListItemIcon>
                         Account
-                    </MenuItem>
-                    <MenuItem>
-                        <ListItemIcon>
-                            <Palette fontSize="small" />
-                        </ListItemIcon>
-                        Edit Character
                     </MenuItem>
                     <Divider />
                     <MenuItem>
@@ -270,12 +283,26 @@ const Header = () => {
                         </ListItemIcon>
                         Settings
                     </MenuItem>
-                    <MenuItem>
-                        <ListItemIcon>
-                            <Logout fontSize="small" />
-                        </ListItemIcon>
-                        Logout
-                    </MenuItem>
+                    {
+                        !currentUser&&(
+                            <MenuItem component={Link} to="/logout">
+                                <ListItemIcon>
+                                    <VpnKeyRounded fontSize="small" />
+                                </ListItemIcon>
+                                Login
+                            </MenuItem>
+                        )
+                    }
+                    {
+                        currentUser&&(
+                            <MenuItem onClick={handleLogout}>
+                                <ListItemIcon>
+                                    <Logout fontSize="small" />
+                                </ListItemIcon>
+                                Logout
+                            </MenuItem>
+                        )
+                    }
                 </Menu>
 
             </Toolbar>
@@ -302,20 +329,39 @@ const Header = () => {
                         <Close/>
                     </IconButton>
                 </Box>
-                <Paper elevation={4} square sx={classes.drawerUser}>
-                    <Avatar
-                    sx={{
-                        flexShrink:0
-                    }}
-                    src='/assets/users/rewards_login.webp'
-                    />
-                    <Typography>
-                        Mở khóa các ưu đãi và lợi ích tuyệt vời
-                    </Typography>
-                    <Button component={Link} to='/login'>
-                        Login / Register 
-                    </Button>
-                </Paper>
+                {
+                    currentUser?(
+                        <Paper elevation={4} square sx={classes.drawerUser}>
+                            <Avatar
+                            sx={{
+                                flexShrink:0
+                            }}
+                            src={currentUser&&currentUser.avatar?ASP_APP_FOLDER+currentUser.avatar:"/assets/users/u36.jfif"}
+                            />
+                            <Typography>
+                                {currentUser.name}
+                            </Typography>
+                            <Button component={Link} to='/me'>
+                                My Account
+                            </Button>
+                        </Paper>
+                    ):(
+                        <Paper elevation={4} square sx={classes.drawerUser}>
+                            <Avatar
+                            sx={{
+                                flexShrink:0
+                            }}
+                            src='/assets/users/rewards_login.webp'
+                            />
+                            <Typography>
+                                Join Pixel Town and enjoy the fun together
+                            </Typography>
+                            <Button component={Link} to='/login'>
+                                Login / Register 
+                            </Button>
+                        </Paper>
+                    )
+                }
 
                 <MenuList sx={classes.drawerMenu}>
                     {

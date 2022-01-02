@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import {useSelector} from "react-redux"
 import {
     JsonHubProtocol,
     HubConnectionState,
@@ -23,15 +24,19 @@ const startSignalRConnection = async connection => {
 function useSignalR(connectionHub) {
     const [signalR,setSignalR] = useState(null)
     const [roomId, setRoomId] = useState(null)
+    const {currentUser} = useSelector(state => state.authReducer)
     useEffect(()=>{
         let claim = false;
         //option for signalR
         const options = {
+            accessTokenFactory: ()=> currentUser.accessToken,
             logMessageContent: isDev,
-            logger: isDev ? LogLevel.Warning : LogLevel.Error
+            logger: isDev ? LogLevel.Warning : LogLevel.Error,
+            
         };
         //check if count is change
-        if(!signalR && connectionHub){
+        if(!signalR && connectionHub && currentUser?.accessToken){
+            console.log(currentUser.accessToken)
             async function createConnection(){
                 const connection = new HubConnectionBuilder()
                                 .withUrl(connectionHub, options)
@@ -60,12 +65,14 @@ function useSignalR(connectionHub) {
                 setSignalR(connection);
             }
             createConnection();
-            if(claim && signalR){
+        }
+        return ()=>{
+            if(signalR){
+                console.log("Hello")
                 signalR.stop()
             }
-            return claim = true
         }
-    },[signalR,connectionHub])
+    },[signalR,connectionHub,currentUser?.accessToken,currentUser])
 
     const sendShortMessage = (message)=>{
         message?.length > 0 && signalR.invoke("ShortMessage",roomId,message)

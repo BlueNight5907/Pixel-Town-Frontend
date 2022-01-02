@@ -8,9 +8,11 @@ import IconButton from '@mui/material/IconButton';
 import CloseIcon from '@mui/icons-material/Close';
 import { useStyles } from './style';
 import { Divider, Paper } from '@mui/material';
+import { Link } from 'react-router-dom';
 
 const RoomDetailsDialog = (props) => {
-    const { title, children, openDialog, setOpenDialog, setOpenPassForm } = props;
+  
+    const { title, children, openDialog, setOpenDialog, setOpenPassForm, Id} = props;
 
     const handleClose = () => {
         setOpenDialog(false);
@@ -43,6 +45,7 @@ const RoomDetailsDialog = (props) => {
                 <DialogActions>
                     <Button 
                     size='large'
+                    component={Link} to={`/room/join/${Id}`} 
                     sx={{
                         minWidth:150,
                         borderRadius:5,

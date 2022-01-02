@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Button, Card, CardActions, CardMedia, CardHeader, Typography, Avatar, IconButton, Menu, MenuItem } from '@mui/material';
 import ShareIcon from '@mui/icons-material/Share';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
@@ -7,9 +7,18 @@ import { Circle, StyledMenu, useStyles } from './style'
 import RoomDetailsDialog from '../RoomDetailsDialog';
 import RoomDetails from '../RoomDetails';
 import PasswordFormDialog from '../InputRoomPass';
-import { userRoom } from '../../mockData/TestData';
+import {userRoom} from '../../mockData/TestData';
+import { ASP_APP_FOLDER, MAIN_URL } from '../../constants/config';
+import { getUser } from '../../api/userApi';
+import { Link } from 'react-router-dom';
 
 const RoomCard = (props) => {
+    const [openDialog, setOpenDialog] = React.useState(false);
+    const [hostInfor, setHostInfor] = useState({
+        hostName:"Loading",
+        avtSrc:"/assets/users/u40.jfif"
+    })
+    const { description,roomName, hostId, desImg, currentUser, maxUser , Id} = props;
     // handle Share button
     const [anchorEl, setAnchorEl] = React.useState(null);
     const handleShare_Open = (event) => {
@@ -26,7 +35,32 @@ const RoomCard = (props) => {
     // for enter room password
     const [openPassForm, setOpenPassForm] = React.useState(false);
 
+
+    const coppyRoomCode = ()=>{
+        navigator.clipboard.writeText(Id)
+    }
+
+    const coppyRoomUrl = ()=>{
+        navigator.clipboard.writeText(MAIN_URL+"/room/"+Id)
+    }
     const classes = useStyles();
+
+    useEffect(() => {
+        let isFetching = true
+        async function fetching(){
+            const {data} = await getUser(hostId)
+            if(isFetching){
+                data&&setHostInfor({
+                    hostName:data.name,
+                    avtSrc:data.avatar?ASP_APP_FOLDER+data.avatar:"/assets/users/u40.jfif"
+                })
+            }
+        }
+        fetching()
+        return () => {
+            isFetching = false
+        }
+    }, [hostId])
     return (
         <Card
             elevation={0}
@@ -39,7 +73,7 @@ const RoomCard = (props) => {
                 avatar={
                     <Avatar
                         sx={classes.avt}
-                        src={avtSrc}
+                        src={hostInfor.avtSrc}
                     />
                 }
                 action={
@@ -56,10 +90,16 @@ const RoomCard = (props) => {
                             open={Boolean(anchorEl)}
                             onClose={handleShare_Close}
                         >
-                            <MenuItem onClick={handleShare_Close}>
+                            <MenuItem onClick={()=>{
+                                handleShare_Close()
+                                coppyRoomUrl()
+                            }}>
                                 Get URL
                             </MenuItem>
-                            <MenuItem onClick={handleShare_Close} disableRipple>
+                            <MenuItem onClick={()=>{
+                                handleShare_Close()
+                                coppyRoomCode()
+                            }} disableRipple>
                                 Get Code
                             </MenuItem>
                         </StyledMenu>
@@ -67,7 +107,7 @@ const RoomCard = (props) => {
                 }
                 title={roomName}
                 subheader={
-                    <Typography variant='subtitle2' color='primary'>{hostName}</Typography>
+                    <Typography variant='subtitle2' color='primary'>{hostInfor.hostName}</Typography>
                 }
                 sx={classes.cardHeader}
             />
@@ -82,6 +122,7 @@ const RoomCard = (props) => {
                 <Typography variant='subtitle2'>
                     <Circle /> {currentUser}/{maxUser}
                 </Typography>
+
                 <Button
                     sx={classes.button}
                     disableElevation
@@ -89,8 +130,10 @@ const RoomCard = (props) => {
                     onClick={() => {
                         setOpenPassForm(true);
                     }}>
+                      {//component={Link} to={`/room/join/${Id}`}}
                     Join room
                 </Button>
+
                 <IconButton
                     size='medium'
                     onClick={() => setOpenDialog(true)}
@@ -103,8 +146,9 @@ const RoomCard = (props) => {
                 setOpenDialog={setOpenDialog}
                 setOpenPassForm={setOpenPassForm}
                 title={roomName}
+                Id={Id}
             >
-                <RoomDetails hostName={userRoom.hostName} roomID={userRoom.roomID} images={userRoom.images} description={userRoom.description} />
+                <RoomDetails hostName={hostInfor.hostName} roomID={Id} images={userRoom.images} description={description} />
             </RoomDetailsDialog>
             <PasswordFormDialog
                 open={openPassForm}

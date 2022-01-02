@@ -14,7 +14,7 @@ const TemplateRoomCard = (props) => {
     const classes = useStyles();
 
     return (
-        <Card sx={classes.root} onClick={props.onClick}>
+        <Card sx={classes.root} onClick={onClick}>
                 <CardMedia
                     component="img"
                     sx={classes.media}
