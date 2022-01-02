@@ -7,7 +7,7 @@ import { Circle, StyledMenu, useStyles } from './style'
 import RoomDetailsDialog from '../RoomDetailsDialog';
 import RoomDetails from '../RoomDetails';
 import {userRoom} from '../../mockData/TestData';
-import { BASE_URL, MAIN_URL } from '../../constants/config';
+import { ASP_APP_FOLDER, MAIN_URL } from '../../constants/config';
 import { getUser } from '../../api/userApi';
 import { Link } from 'react-router-dom';
 
@@ -43,7 +43,7 @@ const RoomCard = (props) => {
             if(isFetching){
                 data&&setHostInfor({
                     hostName:data.name,
-                    avtSrc:data.avatar?BASE_URL+data.avatar:"/assets/users/u40.jfif"
+                    avtSrc:data.avatar?ASP_APP_FOLDER+data.avatar:"/assets/users/u40.jfif"
                 })
             }
         }

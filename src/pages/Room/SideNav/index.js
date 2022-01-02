@@ -7,6 +7,7 @@ import { tooltipClasses } from '@mui/material/Tooltip';
 import ChatPanel from './ChatPanel';
 import PeoplePanel from './PeoplePanel';
 import FilePanel from './FilePanel';
+import { useNavigate } from 'react-router-dom';
 const CustomHomeRoot = styled('button')`
   font-family: IBM Plex Sans, sans-serif;
   font-weight: bold;
@@ -142,13 +143,14 @@ const useStyle = (minDrawWidth, drawWidth, active)=>({
 })
 function SideNav({minDrawWidth = 0,drawWidth,active,handleActive}) {
     const classes = useStyle(minDrawWidth,drawWidth,active)
+    const navigate = useNavigate()
     const [activeTab,setActiveTab] = useState(0)
     return (
         <Paper sx={classes.sidenav} square elevation={4}>
             <Grid container sx={classes.grid}>
                 <Grid item sx={classes.listBtn}>
                     <Stack direction={"column"} alignItems={"center"} spacing={3}>
-                        <HomeButton onClick={()=> handleActive(!active)}>
+                        <HomeButton onClick={()=> navigate("/")}>
                             <HomeRounded/>
                         </HomeButton>
                         <SidebarButton title="People in Group" onClick={()=> {

@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import WrapperSection from '../../components/WrapperSection'
 import {Button, Grid, Paper, Stack, Typography} from "@mui/material"
 import useStyles from './style'
@@ -7,7 +7,10 @@ import { Box, styled } from '@mui/system'
 import { Mic, VideocamRounded, VolumeUpRounded } from '@mui/icons-material'
 import * as characters from "../../game/constant/character"
 import { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useParams} from 'react-router-dom'
+import {useDispatch, useSelector} from "react-redux"
+import { joinRoom } from '../../stores/actions/JoinRoom'
+import { SET_CHARACTER, SET_READY_TO_JOIN } from '../../stores/types/JoinRoom'
 const Select = styled("select")(({theme})=>({
     borderRadius:13,
     backgroundColor:"#fff",
@@ -78,9 +81,43 @@ function Character({name,onSelect, index, selected}){
 function JoinRoom() {
     const [selected, setSelected] = useState(0)
     const navigate = useNavigate()
+    let {roomId} = useParams();
+    const dispatch = useDispatch()
+    const {loadingJoinRoom, errorLoadingJoinRoom, readyToJoin} = useSelector(state => state.joinRoomReducer)
+
+    useEffect(()=>{
+        dispatch({
+            type:SET_READY_TO_JOIN,
+            payload:{
+                data:false
+            }
+        })
+    },[])
+
     const onChange = (value)=>{
         setSelected(value)
     }
+
+    const handleSubmit = () => {
+        let CharacterID = Object.values(characters)[selected].id
+        let myCharacter = Object.values(characters)[selected].name
+        dispatch({
+            type:SET_CHARACTER,
+            payload:{
+                data:myCharacter
+            }
+        })
+        dispatch(joinRoom(roomId,CharacterID))
+    }
+
+    useEffect(() => {
+        setTimeout(() => {
+            if(!(loadingJoinRoom || errorLoadingJoinRoom) && readyToJoin){
+                navigate("/room/"+roomId)
+            }
+        }, 500);
+    }, [loadingJoinRoom, errorLoadingJoinRoom, roomId, navigate,readyToJoin])
+
     const classes = useStyles();
     return (
         <WrapperSection sx={{
@@ -148,7 +185,7 @@ function JoinRoom() {
                                 backgroundColor:theme => theme.main.btnColor,
                                 color:"#fff"
                             }
-                        }}>Join Room</Button>
+                        }} onClick = {handleSubmit} disabled={loadingJoinRoom}>Join Room</Button>
                     </Grid>
                 </Grid>
             </Paper>

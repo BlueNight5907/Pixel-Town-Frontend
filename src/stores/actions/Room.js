@@ -93,6 +93,7 @@ export const getExploreRooms = (path)=>{
         try{
             const result = await getWorldRooms(path);
             const data = result.data;
+            console.log(data)
             const allRooms = data?.map((room)=>{
                 return{
                     id:room.id,
@@ -133,7 +134,7 @@ export const getExploreRooms = (path)=>{
 }
 
 export const createRoom = (formData)=>{
-    return async(dispatch, getState)=>{
+    return async(dispatch)=>{
 
         //loading get myroom
         dispatch({type:CREATE_ROOM_REQUEST})
@@ -177,3 +178,4 @@ export const createRoom = (formData)=>{
         }
     }
 }
+
