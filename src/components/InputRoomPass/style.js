@@ -8,7 +8,6 @@ export const useStyles = () => ({
     },
     contentText:{
         color: '#ECEEEF',
-        mb: 2,
     }
 });
 

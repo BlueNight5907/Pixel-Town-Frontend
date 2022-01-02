@@ -18,7 +18,7 @@ const RoomCard = (props) => {
         hostName:"Loading",
         avtSrc:"/assets/users/u40.jfif"
     })
-    const { description,roomName, hostId, desImg, currentUser, maxUser , Id} = props;
+    const { description,roomName, hostId, desImg, currentUser, maxUser , Id, password} = props;
     // handle Share button
     const [anchorEl, setAnchorEl] = React.useState(null);
     const handleShare_Open = (event) => {
@@ -27,10 +27,6 @@ const RoomCard = (props) => {
     const handleShare_Close = () => {
         setAnchorEl(null);
     };
-
-    // for details dialog
-    const [openDialog, setOpenDialog] = React.useState(false);
-    const { avtSrc, roomName, hostName, desImg, currentUser, maxUser } = props;
 
     // for enter room password
     const [openPassForm, setOpenPassForm] = React.useState(false);
@@ -44,6 +40,21 @@ const RoomCard = (props) => {
         navigator.clipboard.writeText(MAIN_URL+"/room/"+Id)
     }
     const classes = useStyles();
+
+    const withPassType = ()=>{
+        if(password){
+            return{
+                onClick:() => {
+                    setOpenPassForm(password&&true);
+                }
+            }
+        }
+        return {
+            component:Link,
+            to:`/room/join/${Id}`
+        }
+    }
+    
 
     useEffect(() => {
         let isFetching = true
@@ -127,10 +138,11 @@ const RoomCard = (props) => {
                     sx={classes.button}
                     disableElevation
                     size='medium'
-                    onClick={() => {
-                        setOpenPassForm(true);
-                    }}>
-                      {//component={Link} to={`/room/join/${Id}`}}
+                    {
+                        ...withPassType()
+                    }
+                    >
+                    
                     Join room
                 </Button>
 
@@ -144,16 +156,19 @@ const RoomCard = (props) => {
             <RoomDetailsDialog
                 openDialog={openDialog}
                 setOpenDialog={setOpenDialog}
-                setOpenPassForm={setOpenPassForm}
                 title={roomName}
                 Id={Id}
+                {...withPassType()}
             >
                 <RoomDetails hostName={hostInfor.hostName} roomID={Id} images={userRoom.images} description={description} />
             </RoomDetailsDialog>
+            {password&&(
             <PasswordFormDialog
                 open={openPassForm}
                 setOpen={setOpenPassForm}
-            />
+                password={password}
+                to={`/room/join/${Id}`}
+            />)}
         </Card>
     );
 };

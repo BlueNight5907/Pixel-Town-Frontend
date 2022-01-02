@@ -177,6 +177,7 @@ const UserDashboard = () => {
                                     currentUser={50}
                                     maxUser={room.quantity}
                                     description={room.description}
+                                    password={room.roomPass}
                                 />
                             </Grid>
                         )
