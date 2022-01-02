@@ -7,18 +7,26 @@ import UserDashboard from './pages/UserDashboard';
 import Auth from './pages/Auth';
 import RoomLayout from './pages/Room/RoomLayout';
 import UserDashboardLayout from "./layouts/UserDashboardLayout"
+import MyRoom from './pages/MyRoom';
 import JoinRoom from './pages/JoinRoom';
 function AppRouter() {
     return (
         <Router>
             <Routes>
-                <Route path={"/login"} element={<Auth/>}/>
-                <Route path={"/register"} element={<Auth/>}/>
+                <Route path={"/login"} element={<Auth />} />
+                <Route path={"/register"} element={<Auth />} />
 
                 <Route path="/" element={
                     <UserDashboardLayout>
-                        <UserDashboard/>
+                        <UserDashboard />
                     </UserDashboardLayout>
+                } />
+                <Route path={"/myroom"} element={
+                    <UserDashboardLayout>
+                        <MyRoom />
+                    </UserDashboardLayout>
+                } />
+                  
                 }/>
                 <Route path="/explore" element={
                     <UserDashboardLayout>

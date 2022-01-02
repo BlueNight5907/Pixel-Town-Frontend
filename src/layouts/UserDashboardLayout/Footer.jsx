@@ -6,6 +6,7 @@ const Footer = () => {
         <footer>
             <Paper sx={
                 {
+                    marginTop: 5,
                     background: '#011627',
                     height: '200px',
                     width:"100%",

@@ -19,6 +19,7 @@ const Image = styled('img')({
     height:'100%',
     objectFit:'cover',
     zIndex:1,
+    borderRadius: 5
 });
 
 export default function CarouselItem({src}){

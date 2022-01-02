@@ -12,6 +12,7 @@ import EmojiPeopleIcon from '@mui/icons-material/EmojiPeople';
 import {useDispatch} from "react-redux";
 import {createRoom} from "../../stores/actions/Room.js"
 const CreateRoomDrawer = (props) => {
+
     const { open, setClose, data} = props;
     const dispatch = useDispatch();
     const [formData,setFormData] = useState({
@@ -21,6 +22,7 @@ const CreateRoomDrawer = (props) => {
         description:"",
         quantity:0
     })
+
 
     const classes = useStyles();
     useEffect(() => {
@@ -131,11 +133,12 @@ const CreateRoomDrawer = (props) => {
                     />
                 </Box>
                 <Typography variant='subtitle1' sx={classes.lowLightText}>
-                    <b>Description: (optional)</b>
+                    <b>Describe your room:</b>
                 </Typography>
                 <InputField
-                    label="Room Description"
-                    type="text"
+                    id="outlined-required"
+                    label="Description"
+                    multiline
                     onChange={(e) => setFormData({
                         ...formData,
                         description:e.target.value

@@ -6,6 +6,7 @@ import { Box } from '@mui/system';
 import { Circle, StyledMenu, useStyles } from './style'
 import RoomDetailsDialog from '../RoomDetailsDialog';
 import RoomDetails from '../RoomDetails';
+import PasswordFormDialog from '../InputRoomPass';
 import {userRoom} from '../../mockData/TestData';
 import { ASP_APP_FOLDER, MAIN_URL } from '../../constants/config';
 import { getUser } from '../../api/userApi';
@@ -26,6 +27,14 @@ const RoomCard = (props) => {
     const handleShare_Close = () => {
         setAnchorEl(null);
     };
+
+    // for details dialog
+    const [openDialog, setOpenDialog] = React.useState(false);
+    const { avtSrc, roomName, hostName, desImg, currentUser, maxUser } = props;
+
+    // for enter room password
+    const [openPassForm, setOpenPassForm] = React.useState(false);
+
 
     const coppyRoomCode = ()=>{
         navigator.clipboard.writeText(Id)
@@ -56,7 +65,7 @@ const RoomCard = (props) => {
         <Card
             elevation={0}
             sx={{
-                ...classes.root, 
+                ...classes.root,
                 ...classes.theme
             }}
         >
@@ -113,7 +122,18 @@ const RoomCard = (props) => {
                 <Typography variant='subtitle2'>
                     <Circle /> {currentUser}/{maxUser}
                 </Typography>
-                <Button sx={classes.button} component={Link} to={`/room/join/${Id}`} disableElevation size='medium'>Join room</Button>
+
+                <Button
+                    sx={classes.button}
+                    disableElevation
+                    size='medium'
+                    onClick={() => {
+                        setOpenPassForm(true);
+                    }}>
+                      {//component={Link} to={`/room/join/${Id}`}}
+                    Join room
+                </Button>
+
                 <IconButton
                     size='medium'
                     onClick={() => setOpenDialog(true)}
@@ -122,13 +142,18 @@ const RoomCard = (props) => {
                 </IconButton>
             </CardActions>
             <RoomDetailsDialog
-                openDialog = {openDialog}
-                setOpenDialog = {setOpenDialog}
-                title = {roomName}
+                openDialog={openDialog}
+                setOpenDialog={setOpenDialog}
+                setOpenPassForm={setOpenPassForm}
+                title={roomName}
                 Id={Id}
             >
                 <RoomDetails hostName={hostInfor.hostName} roomID={Id} images={userRoom.images} description={description} />
             </RoomDetailsDialog>
+            <PasswordFormDialog
+                open={openPassForm}
+                setOpen={setOpenPassForm}
+            />
         </Card>
     );
 };

@@ -11,7 +11,8 @@ import { Divider, Paper } from '@mui/material';
 import { Link } from 'react-router-dom';
 
 const RoomDetailsDialog = (props) => {
-    const { title, children, openDialog, setOpenDialog , Id} = props;
+  
+    const { title, children, openDialog, setOpenDialog, setOpenPassForm, Id} = props;
 
     const handleClose = () => {
         setOpenDialog(false);
@@ -26,29 +27,37 @@ const RoomDetailsDialog = (props) => {
             open={openDialog}
             sx={classes.root}
             PaperProps={{sx:{
-                borderRadius:5,
+                borderRadius:2,
                 backgroundColor:"transparent"
             }}}
         >
             <Paper sx={classes.paperRoot}>
-                <DialogTitle>
+                <DialogTitle sx={classes.dialogTitle}>
                     {title}
                     <IconButton onClick={handleClose} sx={classes.closeIcon}>
                         <CloseIcon />
                     </IconButton>
                 </DialogTitle>
                 <Divider variant='middle' />
-                <DialogContent>
+                <DialogContent sx={classes.dialogContent}>
                     {children}
                 </DialogContent>
                 <DialogActions>
-                    <Button sx={{
+                    <Button 
+                    size='large'
+                    component={Link} to={`/room/join/${Id}`} 
+                    sx={{
                         minWidth:150,
                         borderRadius:5,
                         "&:hover":{
                             color:theme => theme.main.btnColor
                         }
-                    }} autoFocus onClick={handleClose}  component={Link} to={`/room/join/${Id}`} >
+                    }} autoFocus onClick={
+                        () => {
+                            handleClose();
+                            //setOpenPassForm(true);
+                        }
+                    }>
                         Join
                     </Button>
                 </DialogActions>

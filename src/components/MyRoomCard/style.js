@@ -32,39 +32,55 @@ export const StyledMenu = styled((props) => (
 }));
 
 export const useStyles = () => ({
-    root:{
-        width:'100%',
-        position:'relative',
-        display:"block",
-        alignItems:'center',
+    root: {
+        width: '100%',
+        position: 'relative',
+        display: "block",
+        alignItems: 'center',
         borderRadius: '10px'
     },
-    theme:{
+    theme: {
         border: '#132F4C 2px solid',
         background: '#001E3C',
         color: '#ffffff',
     },
-    cardHeader:{
-        padding: '8px 12px',
+    cardSharingAction: {
+        position: 'absolute',
+        top: 2,
+        right: 2,
+        borderRadius: '20px',
+        backgroundColor: 'rgba(0, 0, 0, 0.1)',
+        '&:hover':{
+            backgroundColor: 'rgba(0, 0, 0, 0.5)',
+        },
+        '&:hover .MuiButtonBase-root .MuiSvgIcon-root': {
+            color: '#4BABFF',
+        }
     },
-    cardAction:{
+    cardHeader: {
+        position: 'absolute',
+        padding: '5px 14px',
+        top: 0,
+        left: 0,
+    },
+    cardAction: {
         padding: '0px 12px',
         display: 'flex',
         justifyContent: 'space-between',
     },
-    avt:{
+    avt: {
         width: 36,
         height: 36,
         position: 'relative'
     },
-    icon:{
-        color: 'white'
+    icon: {
+        color: 'white',
     },
-    button: { 
-        borderRadius: 20, 
-        padding: '5px 20px' 
+    button: {
+        borderRadius: 20,
+        padding: '5px 20px'
     },
-    media:{
-        height: '180px'
+    media: {
+        height: '200px'
     }
 });
