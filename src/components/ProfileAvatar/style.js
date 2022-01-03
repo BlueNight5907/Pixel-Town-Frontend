@@ -6,7 +6,7 @@ export const useStyles = () => ({
         color: '#1D1F23',
         '&:hover': {
             backgroundColor: '#132F4C',
-            color: 'white'
+            color: 'white',
         }
     },
     displayAvatar: {

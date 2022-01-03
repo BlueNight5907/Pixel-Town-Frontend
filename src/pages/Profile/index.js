@@ -6,7 +6,7 @@ import { useStyles } from './style';
 
 export default function Profile(){
     const classes = useStyles();
-
+    
     return (
         <Fragment>
             <Grid container spacing={5} >

@@ -5,7 +5,7 @@ import { InputField, useStyles } from "./style";
 
 const ProfileForm = (props) => {
     const {data} = props;
-    
+ 
     const [formData,setFormData] = useState({
         name:"",
         email:"",

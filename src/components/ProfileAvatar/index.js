@@ -8,7 +8,7 @@ import { useStyles } from './style';
 const Input = styled("input")({
     display: "none",
 });
-
+ 
 const AvartarWithUploadButton = (props) => {
     const { src } = props;
 

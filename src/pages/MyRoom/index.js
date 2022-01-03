@@ -7,7 +7,7 @@ const MyRoom = () => {
         <Grid container spacing={4} sx={{
             marginBottom:10
         }}>
-            <Grid item xs={12} sm={6} md={6} lg={6}>
+            <Grid item xs={12} sm={6} md={6} lg={6}> 
                 <MyRoomCard
                     avtSrc="https://www.freecodecamp.org/news/content/images/2021/06/Ekran-Resmi-2019-11-18-18.08.13.png"
                     roomName="Pixel Town"
