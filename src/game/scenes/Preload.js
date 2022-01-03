@@ -56,12 +56,12 @@ export default class Preload extends Phaser.Scene{
         this.load.atlas(john.name,john.png, john.json);
     }
     create(){
-        const {signalR, data} = this.data
-        console.log(data)
+        const {signalR,dispatch, data} = this.data
         const character = getCharacter(data.character)
         signalR.on("joined", (roomInfor)=>{
             this.scene.start(MainScene,{
-                signalR:this.data.signalR,
+                signalR:signalR,
+                dispatch:dispatch,
                 char:character,
                 data:{
                     name:data.name,

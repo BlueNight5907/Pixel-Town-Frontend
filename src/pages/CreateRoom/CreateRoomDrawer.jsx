@@ -19,8 +19,8 @@ const CreateRoomDrawer = (props) => {
         mapId:data?.tid,
         roomName:"",
         roomPass:"",
-        description:"",
-        quantity:0
+        quantity:0,
+        description:"" 
     })
 
 
@@ -44,7 +44,7 @@ const CreateRoomDrawer = (props) => {
             roomName:"",
             roomPass:"",
             description:"",
-            quantity:0
+            quantity:data.max
         })
     }
     return (
@@ -136,7 +136,6 @@ const CreateRoomDrawer = (props) => {
                     <b>Describe your room:</b>
                 </Typography>
                 <InputField
-                    id="outlined-required"
                     label="Description"
                     multiline
                     onChange={(e) => setFormData({
@@ -153,7 +152,7 @@ const CreateRoomDrawer = (props) => {
                     type="password"
                     onChange={(e) => setFormData({
                         ...formData,
-                        password:e.target.value
+                        roomPass:e.target.value
                     })}
                 />
             </Box>

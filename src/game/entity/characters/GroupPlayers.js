@@ -1,15 +1,15 @@
+import { getAllPeople } from "../../../stores/actions/JoinRoom"
 import getCharacter from "../../util/getCharacter"
 import Character from "./Character"
 
 export default class GroupPlayers{
-    constructor(scene,spawPoint,signalR,roomInfor){
+    constructor(scene,spawPoint,signalR,dispatch, roomInfor){
         this.scene = scene
         this.sceneGroup = this.scene.add.group()
         this.group = {}
         this.signalR = signalR
+        this.dispatch = dispatch
         signalR.on("AllPlayer", (data)=>{
-
-            console.log(data);
             data.users.forEach(user => {
 
                 if(user.signalrID === signalR.connectionId) return;
@@ -29,8 +29,9 @@ export default class GroupPlayers{
         })
 
         signalR.on("NewUserEntry", (user)=>{
-            console.log(user);
             if(user.signalrID === signalR.connectionId) return;
+            console.log(roomInfor)
+            dispatch(getAllPeople(roomInfor.roomId))
             const {character,name,position,signalrID} = user
 
             let x = spawPoint.x
@@ -44,8 +45,8 @@ export default class GroupPlayers{
             const newUser = new Character(this.scene,x,y,getCharacter(character).name,name,signalrID)
             this.add(newUser)
         })
-
         signalR.on("UserOut",data =>{
+            dispatch(getAllPeople(roomInfor.roomId))
             const user = this.group[data.signalrID]
             this.remove(user)
         })
@@ -70,10 +71,7 @@ export default class GroupPlayers{
             const user = this.group[data.signalrID]
             user?.addChatBox(data.message)
         })
-
         signalR.invoke("GetAllPlayer",roomInfor.roomId)
-        
-        console.log(signalR)
     }
 
     add(character){

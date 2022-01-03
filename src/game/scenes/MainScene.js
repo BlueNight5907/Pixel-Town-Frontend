@@ -6,11 +6,11 @@ export default class MainScene extends Phaser.Scene{
         super('MainScene');
         this.paddleRightVelocity = new Phaser.Math.Vector2(0,0)
     }
-    init({signalR, char, data}){
+    init({signalR, char, data,dispatch}){
         this.signalR = signalR
         this.char = char
         this.data = data
-        console.log(data)
+        this.dispatch = dispatch
     }
 
     preload(){
@@ -62,7 +62,7 @@ export default class MainScene extends Phaser.Scene{
         this.playerBody = player.character.self;
         this.player = player;
 
-        this.groupPlayer = new GroupPlayers(this,spawnPoint, this.signalR, this.data.roomInfor);
+        this.groupPlayer = new GroupPlayers(this,spawnPoint, this.signalR,this.dispatch, this.data.roomInfor);
         const camera = this.cameras.main;
         camera.startFollow(this.playerBody);
         camera.setBounds(0, 0, map.widthInPixels, map.heightInPixels);

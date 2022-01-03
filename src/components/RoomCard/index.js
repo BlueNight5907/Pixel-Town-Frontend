@@ -11,16 +11,19 @@ import {userRoom} from '../../mockData/TestData';
 import { ASP_APP_FOLDER, MAIN_URL } from '../../constants/config';
 import { getUser } from '../../api/userApi';
 import { Link } from 'react-router-dom';
+import { useSelector } from 'react-redux';
 
 const RoomCard = (props) => {
     const [openDialog, setOpenDialog] = React.useState(false);
+    const {currentUser} = useSelector(state => state.authReducer)
     const [hostInfor, setHostInfor] = useState({
         hostName:"Loading",
         avtSrc:"/assets/users/u40.jfif"
     })
-    const { description,roomName, hostId, desImg, currentUser, maxUser , Id, password} = props;
+    const { description,roomName, hostId, desImg, maxUser , Id, password, userJoinRoom} = props;
     // handle Share button
     const [anchorEl, setAnchorEl] = React.useState(null);
+    const [numberUser,setNumberUser] = React.useState(0);
     const handleShare_Open = (event) => {
         setAnchorEl(event.currentTarget);
     };
@@ -28,6 +31,22 @@ const RoomCard = (props) => {
         setAnchorEl(null);
     };
 
+    useEffect(()=>{
+        let hasUser = false;
+        let length = userJoinRoom?.length
+        for(let i = 0;i < length ;i++){
+            if(userJoinRoom[i].userId === currentUser.id){
+                hasUser = true
+                break
+            }
+        }
+        if(hasUser){
+            setNumberUser(length)
+        }
+        else{
+            setNumberUser(length + 1)
+        }
+    },[userJoinRoom])
     // for enter room password
     const [openPassForm, setOpenPassForm] = React.useState(false);
 
@@ -131,7 +150,7 @@ const RoomCard = (props) => {
                 sx={classes.cardAction}
             >
                 <Typography variant='subtitle2'>
-                    <Circle /> {currentUser}/{maxUser}
+                    <Circle /> {numberUser}/{maxUser}
                 </Typography>
 
                 <Button

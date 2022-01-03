@@ -8,6 +8,8 @@ import ChatPanel from './ChatPanel';
 import PeoplePanel from './PeoplePanel';
 import FilePanel from './FilePanel';
 import { useNavigate } from 'react-router-dom';
+import { SET_READY_TO_JOIN } from '../../../stores/types/JoinRoom';
+import { useDispatch } from 'react-redux';
 const CustomHomeRoot = styled('button')`
   font-family: IBM Plex Sans, sans-serif;
   font-weight: bold;
@@ -144,13 +146,21 @@ const useStyle = (minDrawWidth, drawWidth, active)=>({
 function SideNav({minDrawWidth = 0,drawWidth,active,handleActive}) {
     const classes = useStyle(minDrawWidth,drawWidth,active)
     const navigate = useNavigate()
+    const dispatch = useDispatch()
     const [activeTab,setActiveTab] = useState(0)
     return (
         <Paper sx={classes.sidenav} square elevation={4}>
             <Grid container sx={classes.grid}>
                 <Grid item sx={classes.listBtn}>
                     <Stack direction={"column"} alignItems={"center"} spacing={3}>
-                        <HomeButton onClick={()=> navigate("/")}>
+                        <HomeButton onClick={()=> {
+                          dispatch({
+                            type:SET_READY_TO_JOIN,
+                            payload:{
+                                data:false
+                            }
+                          })
+                          navigate("/")}}>
                             <HomeRounded/>
                         </HomeButton>
                         <SidebarButton title="People in Group" onClick={()=> {

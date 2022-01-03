@@ -174,10 +174,10 @@ const UserDashboard = () => {
                                     roomName={room.roomName}
                                     hostId={room.hostId}
                                     desImg="https://media.sketchfab.com/models/9363665ee7b94a16b6aba18a89d70be9/thumbnails/b5c7bc7d6dfe496fac3463b45e535ef8/b4b17aa65e68425ab4aea8db1f136202.jpeg"
-                                    currentUser={50}
                                     maxUser={room.quantity}
                                     description={room.description}
                                     password={room.roomPass}
+                                    userJoinRoom = {room.userJoinRoom}
                                 />
                             </Grid>
                         )

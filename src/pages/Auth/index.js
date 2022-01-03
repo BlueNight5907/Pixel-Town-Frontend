@@ -4,7 +4,9 @@ import { CelebrationRounded, EmailRounded, Google, LinkedIn, Lock, LockOutlined,
 import { AuthButton, AuthWrapper, FormContainer, FormControl, FormTitle, FormWrapper, LinkButton, Panel, PanelImage, PanelWrapper, SigninForm, SignupForm, SocialButton, useStyles } from './style'
 import { useNavigate, useLocation  } from 'react-router-dom'
 import {useSelector, useDispatch} from "react-redux"
-import { login } from '../../stores/actions/Auth'
+import { login, register } from '../../stores/actions/Auth'
+import { SET_SMALL_NOTIFICATION,DELETE_SMALL_NOTIFICATION } from '../../stores/types/Notification'
+
 //use to detect user login or register
 const useAuth = (location)=>{
     const [isLogin,setIsLogin] = useState(true)
@@ -25,12 +27,45 @@ function Auth(props) {
     const navigate  = useNavigate();
     const classes = useStyles();
     const dispatch = useDispatch();
-    const { currentUser, loadingLogin} = useSelector((state) => state.authReducer);
+    const { currentUser, loadingLogin, loadingRegister, responseRegister} = useSelector((state) => state.authReducer);
+
     const [loginForm, setLoginForm] = useState({
         email:"",
         password:""
     })
+
+    const [registerForm, setRegisterForm] = useState({
+        name:"",
+        email:"",
+        password:"",
+        birthday:"1999-01-01",
+        address:"",
+        confirmPassword:""
+
+    })
+
     useEffect(() => {
+        if(responseRegister){
+            dispatch({
+                type:SET_SMALL_NOTIFICATION,
+                payload:{
+                    data:responseRegister
+                }
+            })
+            setTimeout(()=>{
+                dispatch({
+                    type:DELETE_SMALL_NOTIFICATION,
+                })
+                navigate("/login")
+            },1500)
+        }
+        return () => {
+            
+        }
+    }, [responseRegister,navigate,dispatch])
+
+    useEffect(() => {
+        
         if(currentUser){
             console.log(currentUser)
             navigate("/")
@@ -43,12 +78,51 @@ function Auth(props) {
         event.preventDefault()
         if(event.target.login){
             console.log('login')
+            console.log(loginForm)
             dispatch(login({Email:loginForm.email, Password:loginForm.password}))
         }
         else{
             console.log('register')
+            if(validate(registerForm)){
+                const newForm = {
+                    name:registerForm.name,
+                    email:registerForm.email,
+                    password:registerForm.password,
+                    birthday:registerForm.birthday.split("-").reverse().join("/"),
+                    address:"",
+                }
+                dispatch(register(newForm))
+            }
+        }    
+    }
+    const validate = (form)=>{
+        let error = ""
+        if(!form.name){
+            error = "Please enter display name!!"
         }
-        
+        else if(!form.email || !String(form.email)
+        .toLowerCase()
+        .match(
+          /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+        )){
+            error = "Email does not valid!!!"
+        }
+        else if(!form.password){
+            error = "Please enter your password!!!"
+        }
+        else if(form.confirmPassword !== form.password){
+            error = "Password does not match!!"
+        }
+        if(error){
+            dispatch({
+                type:SET_SMALL_NOTIFICATION,
+                payload:{
+                    data:error
+                }
+            })
+            return false
+        }
+        return true
     }
     return (
         <Fragment>
@@ -89,25 +163,51 @@ function Auth(props) {
                         <FormTitle>Đăng ký</FormTitle>
                         <FormControl>
                             <Person/>
-                            <input type="text" placeholder="Display Name" />
+                            <input type="text" placeholder="Display Name" 
+                            value={registerForm.name}
+                            onChange={(e)=> setRegisterForm({
+                                ...registerForm,
+                                name:e.target.value
+                            })}/>
                         </FormControl>
                         <FormControl>
                             <CelebrationRounded/>
-                            <input type="date" placeholder="Birthday" />
+                            <input type="date" placeholder="Birthday" 
+                            value={registerForm.birthday}
+                            onChange={(e)=> setRegisterForm({
+                                ...registerForm,
+                                birthday:e.target.value
+                            })}/>
                         </FormControl>
                         <FormControl>
                             <EmailRounded/>
-                            <input type="email" placeholder="Email" />
+                            <input type="email" placeholder="Email" 
+                            value={registerForm.email}
+                            onChange={(e)=> setRegisterForm({
+                                ...registerForm,
+                                email:e.target.value
+                            })}/>
                         </FormControl>
                         <FormControl>
                             <Lock/>
-                            <input type="password" placeholder="Password" />
+                            <input type="password" placeholder="Password" 
+                            value={registerForm.password}
+                            onChange={(e)=> setRegisterForm({
+                                ...registerForm,
+                                password:e.target.value
+                            })}/>
                         </FormControl>
                         <FormControl>
                             <LockOutlined/>
-                            <input type="password" placeholder="Confirm Password" />
+                            <input type="password" placeholder="Confirm Password"
+                            value={registerForm.confirmPassword}
+                            onChange={(e)=> setRegisterForm({
+                                ...registerForm,
+                                confirmPassword:e.target.value
+                            })} 
+                            />
                         </FormControl>
-                        <AuthButton type='submit' name='register'>
+                        <AuthButton type='submit' name='register' disabled={loadingRegister}>
                             Đăng ký
                         </AuthButton>
                         <Typography sx={{padding:'0.5rem 0'}}>Or Sign up with social platforms</Typography>

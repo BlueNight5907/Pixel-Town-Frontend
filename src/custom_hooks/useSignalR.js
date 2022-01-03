@@ -26,7 +26,6 @@ function useSignalR(connectionHub) {
     const [roomId, setRoomId] = useState(null)
     const {currentUser} = useSelector(state => state.authReducer)
     useEffect(()=>{
-        let claim = false;
         //option for signalR
         const options = {
             accessTokenFactory: ()=> currentUser.accessToken,
@@ -36,7 +35,6 @@ function useSignalR(connectionHub) {
         };
         //check if count is change
         if(!signalR && connectionHub && currentUser?.accessToken){
-            console.log(currentUser.accessToken)
             async function createConnection(){
                 const connection = new HubConnectionBuilder()
                                 .withUrl(connectionHub, options)
@@ -68,7 +66,6 @@ function useSignalR(connectionHub) {
         }
         return ()=>{
             if(signalR){
-                console.log("Hello")
                 signalR.stop()
             }
         }
@@ -77,10 +74,21 @@ function useSignalR(connectionHub) {
     const sendShortMessage = (message)=>{
         message?.length > 0 && signalR.invoke("ShortMessage",roomId,message)
     }
+
+    const sendLongMessage = (message) => {
+        if(!message || message?.length < 0 || !roomId || !currentUser){
+            return;
+        }
+        signalR.invoke("LongMessage", roomId, message)
+    }
+
+
+
     return {
         signalR,
         setRoomId,
-        sendShortMessage
+        sendShortMessage,
+        sendLongMessage
     }
 }
 

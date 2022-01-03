@@ -7,13 +7,14 @@ import { ConnectionContext } from '../../Context/ConnectionProvider';
 import Section from '../../components/Section';
 import SideNav from './SideNav';
 import { useEffect } from 'react';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 function Room() {
     const {roomId} = useParams();
     const navigate = useNavigate();
     const {myCharacter} = useSelector(state => state.joinRoomReducer)
     const {currentUser} = useSelector(state => state.authReducer)
     const {useSignalR} = useContext(ConnectionContext)
+    const dispatch = useDispatch()
     const {signalR, setRoomId} = useSignalR
     const [sidebarActive,setSidebarActive] = useState(false)
     const [data,setData] = useState({
@@ -44,7 +45,7 @@ function Room() {
         <Fragment>
             <SideNav minDrawWidth={70} drawWidth={370} active={sidebarActive} handleActive={handleActive}/>
             <Section className = "room" drawerWidth={drawerWidth}>
-                <Game signalR={signalR} data={data}/>
+                <Game signalR={signalR} data={data} dispatch={dispatch}/>
                 <SmallScreen/>
                 <BottomBar/>
             </Section>

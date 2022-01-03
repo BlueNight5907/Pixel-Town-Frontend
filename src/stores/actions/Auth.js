@@ -1,11 +1,9 @@
-import {LOGIN_REQUEST, LOGIN_SUCCESS, LOGIN_FAIL, LOGOUT} from "../types/Auth"
-import { loginApi, logoutApi } from "../../api/userApi"
-import { useNavigate } from "react-router-dom";
+import {LOGIN_REQUEST, LOGIN_SUCCESS, LOGIN_FAIL, LOGOUT, REGISTER_REQUEST, REGISTER_FAIL, REGISTER_SUCCESS} from "../types/Auth"
+import { loginApi, logoutApi, registerApi } from "../../api/userApi"
+
 export const login = (form) => {
     return async (dispatch, getState) => {
         try{
-            const stateBefore = getState();
-            console.log("AuthReducer before dispatch: ", stateBefore.authReducer);
             //Vao trạng thái chờ đăng nhập
             dispatch({
                 type:LOGIN_REQUEST
@@ -37,8 +35,6 @@ export const login = (form) => {
                   },
               });
             }, 1500);
-            const stateAfter = getState();
-            console.log("AuthReducer before dispatch: ", stateAfter.authReducer);
 
         } catch (error) {
             console.log(error.response?.data ? error.response.data : error.message)
@@ -55,25 +51,6 @@ export const login = (form) => {
     }
 }
 
-export const getUserInfor = (id) =>{
-  return async(dispatch, getState)=>{
-    try{
-      
-
-  } catch (error) {
-      console.log(error)
-      setTimeout(() => {
-        dispatch({
-          type: LOGIN_FAIL,
-          payload: {
-            error: error.response?.data ? error.response.data : error.message,
-          },
-        });
-      }, 1500);
-      
-    }
-  }
-}
 
 export const logout = () => {
   return async (dispatch) => {
@@ -81,7 +58,6 @@ export const logout = () => {
           //Gọi Api
           const result = await logoutApi();
           const data = result.data;
-          console.log(data)
           localStorage.removeItem(
             "user"
           );
@@ -91,6 +67,41 @@ export const logout = () => {
 
       } catch (error) {
           console.log(error)
+        }
+  }
+}
+
+export const register = (form) => {
+  return async (dispatch, getState) => {
+      try{
+          //Vao trạng thái chờ đăng nhập
+          dispatch({
+              type:REGISTER_REQUEST
+          })
+          //Gọi Api
+          const {data} = await registerApi(form);
+
+          setTimeout(() => {
+            dispatch({
+              type: REGISTER_SUCCESS,
+              payload: {
+                data:data.value,
+              },
+            });
+          }, 1500);
+          
+
+      } catch (error) {
+          console.log(error.response?.data ? error.response.data : error.message)
+          setTimeout(() => {
+            dispatch({
+              type: REGISTER_FAIL,
+              payload: {
+                error: error.response?.data ? error.response.data.value : error.message,
+              },
+            });
+          }, 1500);
+          
         }
   }
 }

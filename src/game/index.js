@@ -32,14 +32,13 @@ export default class Game extends React.Component {
       const game = new Phaser.Game(config);
       this.doResize = ()=> resize(game,this.gameContainer.current)
       window.addEventListener('resize',this.doResize)
-      game.scene.start('Preload',{signalR:this.props.signalR,data:this.props.data});
+      game.scene.start('Preload',{signalR:this.props.signalR,data:this.props.data,dispatch:this.props.dispatch});
       this.game = game;
       
     }
     componentDidUpdate(){
       if(this.props.signalR === null)
         return
-      console.log("Update")
       const config = {
         ...gameConfig,
         parent: this.gameContainer.current,
@@ -48,7 +47,7 @@ export default class Game extends React.Component {
       const game = new Phaser.Game(config);
       this.doResize = ()=> resize(game,this.gameContainer.current)
       window.addEventListener('resize',this.doResize)
-      game.scene.start('Preload',{signalR:this.props.signalR,data:this.props.data});
+      game.scene.start('Preload',{signalR:this.props.signalR,data:this.props.data,dispatch:this.props.dispatch});
       this.game = game;
     }
     shouldComponentUpdate() {

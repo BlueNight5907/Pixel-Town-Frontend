@@ -3,7 +3,7 @@ ADD_NEW_MESSAGE,GET_MESSAGES_FAILED,GET_MESSAGES_REQUEST,GET_MESSAGES_SUCCESS,GE
 const initialState = {
     roomInfor:{},
     users:[],
-    message:[],
+    messages:[],
     myCharacter:null,
     readyToJoin:false,
     loadingJoinRoom: false,
@@ -35,7 +35,9 @@ const joinRoomReducer = (state = initialState, action) => {
         case JOIN_ROOM_REQUEST:
             return {
                 ...state,
-                loadingJoinRoom:true
+                loadingJoinRoom:true,
+                users:[],
+                messages:[],
             }
         case JOIN_ROOM_SUCCESS:
             return {
@@ -77,7 +79,7 @@ const joinRoomReducer = (state = initialState, action) => {
             return {
                 ...state,
                 loadingMessage:false,
-                message:[...state.message,...payload.data]
+                messages:[...payload.data,...state.messages]
             }
         case GET_MESSAGES_FAILED:
             return {
@@ -86,10 +88,11 @@ const joinRoomReducer = (state = initialState, action) => {
                 errorLoadingMessage:payload.error
             }
         case ADD_NEW_MESSAGE:
+            console.log(payload)
             return {
                 ...state,
                 loadingMessage:false,
-                message:[...state.message,...payload.data]
+                messages:[...state.messages,payload.data]
             }
         case SET_CHARACTER:
             return{

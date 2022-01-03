@@ -22,6 +22,9 @@ export default function NotificationDialog() {
       if(smallNotification){
         setOpen(true)
       }
+      else{
+        setOpen(false)
+      }
   }, [smallNotification])
   return (
     <div>

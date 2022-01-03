@@ -1,7 +1,10 @@
 import { ArrowBackIos, RemoveRounded } from '@mui/icons-material'
-import { Avatar, Box, Button, Grid, IconButton, Paper, Stack, Typography } from '@mui/material'
+import { Avatar, Box, Button, Grid, Paper, Stack, Typography } from '@mui/material'
+import { useEffect, useState } from 'react'
+import { useSelector } from 'react-redux'
 import { users } from '../../../mockData/users'
-
+import {getUser} from "../../../api/userApi"
+import { ASP_APP_FOLDER } from '../../../constants/config'
 const useStyles =(owner)=>({
     root:{
         height:"inherit",
@@ -104,19 +107,20 @@ const useStyles =(owner)=>({
 })
 
 function User({edited,data,...other}){
-    const {name, userImg, userID,owner,online} = data
+    const {name, userImg, userId,state,owner} = data
     const classes = useStyles(owner)
+    console.log(state)
     const styles = {
         width:"8px",
         height:"8px",
         borderRadius:"50%",
-        background:online?owner?"##52ff6c":"#8fffa0":"#b0afac",
+        background:state === "Online"?owner?"#52ff6c":"#8fffa0":"#b0afac",
         display:"inline-block"
     }
     return(
         <Grid container sx={classes.user} alignItems="center">
             <Avatar
-            src={userImg}
+            src={ASP_APP_FOLDER + userImg || "/public/users/u29.jfif"}
             sx={classes.avt}/>
             <Stack flexDirection="column" className="infor" gap={0.1}>
                 <Typography className="user-name">
@@ -134,8 +138,44 @@ function User({edited,data,...other}){
 }
 
 
+
 function PeoplePanel({close}) {
     const classes = useStyles()
+    const {users, roomInfor} = useSelector(state => state.joinRoomReducer)
+    const {currentUser} = useSelector(state => state.authReducer)
+    console.log(users,roomInfor)
+    const [host, setHost] = useState({
+        name:"Loading",
+        userID:1,
+        userImg:"/public/users/u33.jfif",
+        owner:true,
+        state:"Offline"
+    })
+
+    useEffect(() => {
+        async function fetch(){
+            const {data} = await getUser(roomInfor.hostId)
+            console.log(data)
+            setHost({
+                name:data.name,
+                userId:roomInfor.hostId,
+                userImg:data.avatar,
+                owner:true,
+                state:"Offline"
+            })
+        }
+        let temp = users?.filter(e => e.userId === roomInfor.hostId)
+        if(temp?.length){
+            setHost({
+                ...temp[0],
+                owner:true
+            })
+        }
+        else(
+            fetch()
+        )
+    }, [roomInfor,users])
+
     return (
         <Paper sx={classes.root} square>
             <Box className="panel-title" sx={classes.title}>
@@ -145,12 +185,7 @@ function PeoplePanel({close}) {
                 <ArrowBackIos onClick={close}/>
             </Box>
             <Box sx={classes.ownerBox}>
-                <User data={{
-                    name:"Nguyen Van Huy",
-                    userID:1,
-                    userImg:"/assets/users/u33.jfif",
-                    owner:true
-                }}/>
+                <User data={host}/>
             </Box>
             <Box className="panel-title" sx={{...classes.title,borderBottom:"2px solid #fff", margin:"0 5px 15px", padding:"10px 5px"}}>
                 <Typography component={"h6"} variant='body1'>
@@ -158,11 +193,12 @@ function PeoplePanel({close}) {
                 </Typography>
             </Box>
             <Paper sx={classes.listPeople} square elevation={0}>
-                {users.map((data,i)=>{
+                {users?.filter(e => e.userId !== roomInfor.hostId).map((data,i)=>{
                     return(
-                        <User data={data} key={i} edited/>
+                        <User data={data} key={i} edited={currentUser.id === roomInfor.hostId}/>
                     )
-                })}
+                })
+                }
             </Paper>
 
         </Paper>

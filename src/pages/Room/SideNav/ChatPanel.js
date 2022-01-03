@@ -1,26 +1,46 @@
 import { ArrowBackIos } from '@mui/icons-material'
-import { Avatar, Box, Button, Grid, Paper, Stack, Typography } from '@mui/material'
+import { Avatar, Box, Button, CircularProgress, Grid, Paper, Stack, Typography } from '@mui/material'
 import React, { useContext, useEffect, useState } from 'react'
 import { ConnectionContext } from '../../../Context/ConnectionProvider'
-
-import { messages } from '../../../mockData/users'
-
+import {useDispatch, useSelector} from "react-redux"
+import { getMessages } from '../../../stores/actions/JoinRoom'
+import { ADD_NEW_MESSAGE } from '../../../stores/types/JoinRoom'
+import { ASP_APP_FOLDER, MAIN_URL } from '../../../constants/config'
+import { useRef } from 'react'
 const MessageInput = ({emojiObject})=>{
     const [message,setMessage] = useState("")
     const {useSignalR} = useContext(ConnectionContext)
-    const {sendShortMessage} = useSignalR
+    const {sendLongMessage, signalR} = useSignalR
+    const dispatch = useDispatch()
     useEffect(()=>{
         if(emojiObject){
             setMessage(mess => mess + emojiObject.emoji)
         }   
     },[emojiObject])
 
+    useEffect(()=>{
+        if(signalR){
+            signalR.off("UserSendLongMessage")
+            signalR.on("UserSendLongMessage",(data)=>{
+                if(!data?.time){
+                    return
+                }
+                dispatch({
+                    type:ADD_NEW_MESSAGE,
+                    payload:{
+                        data:data
+                    }
+                })
+            })
+        }   
+    },[signalR])
+
     const handleChange = (event)=>{
         setMessage(event.target.value)
     }
 
     const sendMessage = ()=>{
-        sendShortMessage(message)
+        sendLongMessage(message)
         setMessage("")
     }
 
@@ -69,6 +89,7 @@ const useStyles =()=>({
         backgroundColor:"inherit",
         display:"flex",
         flexDirection:"column",
+        position:"relative",
     },
     title:{
         padding:"10px",
@@ -117,10 +138,11 @@ const useStyles =()=>({
 })
 
 const MessageBox = ({data,...other})=>{
-    const {userID, message, userImg, name} = data
-    const myID = 1
+    const {userId, message, avatar, time, name} = data
+    const {currentUser} = useSelector(state => state.authReducer)
+    const myID = currentUser?.id
     const tranProps = ()=>{
-        return (userID !== myID)?{
+        return (userId !== myID)?{
             alignItems:"start",
             sx:{
                 "& .time-span":{
@@ -133,7 +155,7 @@ const MessageBox = ({data,...other})=>{
     }
 
     const getClass = ()=>{
-        return (userID !== myID)?{
+        return (userId !== myID)?{
             "& .message-box":{
                 gap:1,
                 "& .message-detail":{
@@ -143,7 +165,8 @@ const MessageBox = ({data,...other})=>{
                     padding:1,
                     borderRadius:2,
                     backgroundColor:"#fff",
-                    maxWidth:"80%"
+                    maxWidth:"80%",
+                    
                 },
                 "& .avt":{
                     width:35,
@@ -158,7 +181,7 @@ const MessageBox = ({data,...other})=>{
             "& .message-detail":{
                 fontSize:"13px",
                 fontWeight:"500",
-                textAlign:"justify"
+                textAlign:"justify",
             },
             maxWidth:"80%"
         }
@@ -170,7 +193,7 @@ const MessageBox = ({data,...other})=>{
         }} {...tranProps()} flexDirection="column">
             <Grid item sx ={{...getClass()}}>
                 {
-                    userID !== myID?(
+                    userId !== myID?(
                         <>
                             <Typography className="user-name" 
                             sx={{
@@ -183,7 +206,7 @@ const MessageBox = ({data,...other})=>{
                             </Typography>
                             <Grid container className="message-box">
                                 <Avatar 
-                                src={userImg}
+                                src={avatar?ASP_APP_FOLDER+avatar:MAIN_URL+"/assets/users/u16.jfif"}
                                 className="avt"/>
                                 <Typography className="message-detail">
                                     {message}
@@ -202,7 +225,7 @@ const MessageBox = ({data,...other})=>{
             </Grid>
             <Grid item>
                 <Typography className="time-span" color="white" component="span" variant="caption">
-                    {new Date().toLocaleString()}
+                    {new Date(time).toLocaleString()}
                 </Typography>
             </Grid>
         </Grid>
@@ -211,9 +234,102 @@ const MessageBox = ({data,...other})=>{
 
 
 function ChatPanel({close}) {
+    const {messages, roomInfor} = useSelector(state => state.joinRoomReducer)
+    const dispatch = useDispatch();
+    const messageList = useRef(null);
+    const lastAnchor =  useRef(null);
+    const lastMessage = useRef(null);
+    const [fetchMess, setFetchMess] = useState(false)
+    const scrollToBottom = () => {
+        return lastAnchor.current.scrollIntoView({ behavior: "smooth" });
+    }
+    const scrollToMessPosition = (position)=>{
+        let childs = messageList.current.childNodes
+        if(!childs || childs.length === 0 ){
+            return
+        }
+        let childLength = childs.length
+        let scrollHeight = 0
+        for(let i = 0;i<childLength;i++){
+            if(childLength - i - 1 < position){
+                break
+            }
+            scrollHeight += childs[i].scrollHeight
+        }
+        messageList.current.scrollTop = scrollHeight
+    }
+    const handleScroll= (e)=>{
+        const top = e.target.scrollTop === 0
+        
+        if(top){
+            setFetchMess(true)
+            lastMessage.current = e.target.childElementCount
+        }
+    }
+
+    useEffect(() => {
+        let timeOut
+        if(fetchMess){
+            timeOut = setTimeout(() => {
+                setFetchMess(false)
+                clearTimeout(timeOut)
+            }, 2000);
+            dispatch(getMessages(roomInfor.id, messages.at(0)?.time))
+
+        }
+    }, [fetchMess])
+
+    useEffect(()=>{
+        if(roomInfor?.hostId != null && messages?.length === 0){
+            setFetchMess(true)
+            dispatch(getMessages(roomInfor.id, Date.now()))
+            let timeOut = setTimeout(() => {
+                setFetchMess(false)
+                clearTimeout(timeOut)
+            }, 1000);
+        }
+    },[])
+
+    useEffect(()=>{
+        if(!fetchMess){
+            scrollToBottom()
+        }
+        else{
+            let messageLength = messages.length
+            if(messageLength > 0 && lastMessage.current){
+                scrollToMessPosition(lastMessage.current)
+            }
+        }
+    },[messages])
+
     const classes = useStyles()
     return (
         <Paper sx={classes.root} square>
+            {
+                fetchMess&&(
+                    <Paper sx={{
+                        position:"absolute",
+                        top:50,
+                        left:0,
+                        padding:1,
+                        width:"100%",
+                        zIndex:101,
+                        display:"flex",
+                        alignItems:"center",
+                        justifyContent:"center",
+                        gap:1,
+                        color:"#0d978f",
+                        backgroundColor:"rgba(255,255,255,0.8)"
+                    }}>
+                        <CircularProgress size={30} sx={{
+                            color:"#24b53a"
+                        }} />
+                        <Typography color="inherit">
+                            Loading old message...
+                        </Typography>
+                    </Paper>
+                )
+            }
             <Box className="panel-title" sx={classes.title}>
                 <Typography component={"h3"} variant='h6'>
                     Chats
@@ -221,7 +337,9 @@ function ChatPanel({close}) {
                 <ArrowBackIos onClick={close}/>
             </Box>
 
-            <Paper sx={classes.listMsg} square elevation={0}>
+            <Paper onScroll={handleScroll}
+            sx={classes.listMsg} ref={messageList} square elevation={0}>
+                
                 {
                     messages.map((data,i)=>{
                         return(
@@ -229,7 +347,7 @@ function ChatPanel({close}) {
                         )
                     })
                 }
-                
+                <div ref={lastAnchor}/>
             </Paper>
 
             <Box sx={classes.bottomBox}>

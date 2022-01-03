@@ -1,5 +1,5 @@
-import { joinRoomApi } from "../../api/roomApi"
-import { JOIN_ROOM_FAILED, JOIN_ROOM_REQUEST, JOIN_ROOM_SUCCESS, SET_READY_TO_JOIN } from "../types/JoinRoom"
+import { getMessagesApi, joinRoomApi, userInRoomApi } from "../../api/roomApi"
+import { GET_MESSAGES_FAILED, GET_MESSAGES_REQUEST,GET_MESSAGES_SUCCESS, GET_USERS_IN_ROOM_FAILED, GET_USERS_IN_ROOM_REQUEST, GET_USERS_IN_ROOM_SUCCESS, JOIN_ROOM_FAILED, JOIN_ROOM_REQUEST, JOIN_ROOM_SUCCESS, SET_READY_TO_JOIN } from "../types/JoinRoom"
 
 export const joinRoom = (roomId,CharacterID)=>{
     return async(dispatch, getState)=>{
@@ -23,7 +23,9 @@ export const joinRoom = (roomId,CharacterID)=>{
                     characterId:user.characterId,
                     userId:user.userId,
                     time:user.time,
-                    state:user.state
+                    state:user.state,
+                    userImg:user.avatar,
+                    name:user.name
                 }
             })
             setTimeout(() => {
@@ -53,6 +55,76 @@ export const joinRoom = (roomId,CharacterID)=>{
                 type: JOIN_ROOM_FAILED,
                 payload: {
                     error: error.response?.data ? error.response.data : error.message,
+                },
+              });
+            }, 1000);
+        }
+    }
+}
+
+export const getAllPeople = (roomId) => {
+    return async(dispatch)=>{
+        //loading get myroom
+        dispatch({type:GET_USERS_IN_ROOM_REQUEST})
+        try{
+            const {data} = await userInRoomApi(roomId)
+            let users = data.value?.map(user =>{
+                return {
+                    characterId:user.characterId,
+                    userId:user.userId,
+                    time:user.time,
+                    state:user.state,
+                    userImg:user.avatar,
+                    name:user.name
+                }
+            })
+            setTimeout(() => {
+                dispatch({
+                    type:GET_USERS_IN_ROOM_SUCCESS,
+                    payload:{
+                        data:users
+                    }
+                })
+            }, 1000);
+        }
+        catch(error){
+            console.log(error.response?.data ? error.response.data : error.message)
+            setTimeout(() => {
+                dispatch({
+                type: GET_USERS_IN_ROOM_FAILED,
+                payload: {
+                    error: error.response?.data ? error.response.data.value : error.message,
+                },
+              });
+            }, 1000);
+        }
+    }
+}
+
+
+export const getMessages = (roomId,time)=>{
+    return async(dispatch, getState)=>{
+        //loading get myroom
+        dispatch({type:GET_MESSAGES_REQUEST})
+        try{
+            const {data} = await getMessagesApi(roomId,time)
+
+            setTimeout(() => {
+                dispatch({
+                    type:GET_MESSAGES_SUCCESS,
+                    payload:{
+                        data:data.value.reverse()
+                    }
+                })
+            }, 1000);
+        }
+        catch(error){
+            console.log(error.response?.data ? error.response.data : error.message)
+            setTimeout(() => {
+                dispatch({
+                type: GET_MESSAGES_FAILED,
+                payload: {
+                    error: error.response?.data ? error.response.data.value : error.message,
                 },
               });
             }, 1000);
