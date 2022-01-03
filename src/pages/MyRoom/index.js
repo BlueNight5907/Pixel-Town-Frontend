@@ -7,7 +7,7 @@ const MyRoom = () => {
         <Grid container spacing={4} sx={{
             marginBottom:10
         }}>
-            <Grid item xs={12} sm={6} md={6} lg={4}>
+            <Grid item xs={12} sm={6} md={6} lg={6}>
                 <MyRoomCard
                     avtSrc="https://www.freecodecamp.org/news/content/images/2021/06/Ekran-Resmi-2019-11-18-18.08.13.png"
                     roomName="Pixel Town"
@@ -18,7 +18,7 @@ const MyRoom = () => {
                     desText="Nơi giao lưu kết bạn tâm giao,..."
                 />
             </Grid>
-            <Grid item xs={12} sm={6} md={6} lg={4}>
+            <Grid item xs={12} sm={6} md={6} lg={6}>
                 <MyRoomCard
                     avtSrc="https://i.pinimg.com/564x/7b/64/c8/7b64c8d6a9ceefa256636659226cd0f2.jpg"
                     roomName="My City"
@@ -29,7 +29,7 @@ const MyRoom = () => {
                     desText="Nơi giao lưu kết bạn tâm giao,..."
                 />
             </Grid>
-            <Grid item xs={12} sm={6} md={6} lg={4}>
+            <Grid item xs={12} sm={6} md={6} lg={6}>
                 <MyRoomCard
                     avtSrc="https://i.pinimg.com/originals/f8/27/ed/f827ed9a704146f65b96226f430abf3c.png"
                     roomName="My Room"
@@ -40,7 +40,7 @@ const MyRoom = () => {
                     desText="Nơi giao lưu kết bạn tâm giao,..."
                 />
             </Grid>
-            <Grid item xs={12} sm={6} md={6} lg={4}>
+            <Grid item xs={12} sm={6} md={6} lg={6}>
                 <MyRoomCard
                     avtSrc="https://www.freecodecamp.org/news/content/images/2021/06/Ekran-Resmi-2019-11-18-18.08.13.png"
                     roomName="Default"
@@ -51,7 +51,7 @@ const MyRoom = () => {
                     desText="Nơi giao lưu kết bạn tâm giao,..."
                 />
             </Grid>
-            <Grid item xs={12} sm={6} md={6} lg={4}>
+            <Grid item xs={12} sm={6} md={6} lg={6}>
                 <MyRoomCard
                     avtSrc="https://www.freecodecamp.org/news/content/images/2021/06/Ekran-Resmi-2019-11-18-18.08.13.png"
                     roomName="Back to hometown"
