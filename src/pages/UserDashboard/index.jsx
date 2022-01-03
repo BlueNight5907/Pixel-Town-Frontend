@@ -113,7 +113,6 @@ const UserDashboard = () => {
         setSelected(index)
     }
 
-
     return (
         <Fragment>
             {pathname === "/"?(<Box sx={{
@@ -168,7 +167,7 @@ const UserDashboard = () => {
                 {
                     rooms.map((room,i)=>{
                         return(
-                            <Grid key={i} item xs={12} sm={6} md={6} lg={4} xl = {3}>
+                            <Grid key={i} item xs={12} sm={6} md={6} lg={4}>
                                 <RoomCard
                                     Id = {room.id}
                                     roomName={room.roomName}
