@@ -4,6 +4,7 @@ import { styled } from '@mui/material/styles'
 import React, { useContext, useEffect, useState } from 'react'
 import Picker from 'emoji-picker-react'
 import {ConnectionContext} from '../../Context/ConnectionProvider'
+import { ASP_APP_FOLDER } from '../../constants/config';
 const MessageInput = ({emojiObject})=>{
     const [message,setMessage] = useState("")
     const {useSignalR} = useContext(ConnectionContext)
@@ -101,6 +102,136 @@ const MessageBox = (props)=>{
         </Paper>
     )
 }
+
+const IconsBox = (props)=>{
+    const [chosenEmoji,setChosenEmoji] = useState(null)
+    const {useSignalR} = useContext(ConnectionContext)
+    const {sendShortMessage} = useSignalR
+    const onEmojiClick = (emojiObject) => {
+        setChosenEmoji(emojiObject);
+    };
+    useEffect(() => {
+        if(chosenEmoji){
+            sendShortMessage(chosenEmoji)
+        }
+    }, [chosenEmoji])
+    return(
+        <Paper sx ={{
+            position:"absolute",
+            bottom:'110%',
+            right:"50%",
+            width:"100%",
+            transform:"translateX(50%)",
+            padding:"6px 20px",
+            display:"flex",
+            flexDirection:"column",
+            borderRadius:"25px",
+            color:"#fff",
+            backgroundColor: theme => theme.main.bgColor
+        }} elevation={2}>
+            <Stack 
+            
+            direction = "row" alignItems="center" justifyContent = "space-between">
+                <IconButton size="small" color="inherit" onClick={()=>{
+                        onEmojiClick("😍")
+                    }}>
+                    <Typography component={"span"} sx={{
+                        width:25,
+                        height:25,
+                        display:"flex",
+                        justifyContent:"center",
+                        alignItems:"center",
+                        fontSize:"1.4rem"
+                    }}
+                    >
+                        {"😍"}
+                    </Typography>
+                </IconButton>
+
+                <IconButton size="small" color="inherit" onClick={()=>{
+                        onEmojiClick("😭")
+                    }}>
+                    <Typography component={"span"} sx={{
+                        width:25,
+                        height:25,
+                        display:"flex",
+                        justifyContent:"center",
+                        alignItems:"center",
+                        fontSize:"1.4rem"
+                    }}
+                    >
+                        {"😭"}
+                    </Typography>
+                </IconButton>
+
+                <IconButton size="small" color="inherit" onClick={()=>{
+                        onEmojiClick("😆")
+                    }}>
+                    <Typography component={"span"} sx={{
+                        width:25,
+                        height:25,
+                        display:"flex",
+                        justifyContent:"center",
+                        alignItems:"center",
+                        fontSize:"1.4rem"
+                    }}
+                    >
+                        {"😆"}
+                    </Typography>
+                </IconButton>
+
+                <IconButton size="small" color="inherit" onClick={()=>{
+                        onEmojiClick("😤")
+                    }}>
+                    <Typography component={"span"} sx={{
+                        width:25,
+                        height:25,
+                        display:"flex",
+                        justifyContent:"center",
+                        alignItems:"center",
+                        fontSize:"1.4rem"
+                    }}
+                    >
+                        {"😤"}
+                    </Typography>
+                </IconButton>
+
+                <IconButton size="small" color="inherit" onClick={()=>{
+                        onEmojiClick("😡")
+                    }}>
+                    <Typography component={"span"} sx={{
+                        width:25,
+                        height:25,
+                        display:"flex",
+                        justifyContent:"center",
+                        alignItems:"center",
+                        fontSize:"1.4rem"
+                    }}
+                    >
+                        {"😡"}
+                    </Typography>
+                </IconButton>
+
+                <IconButton size="small" color="inherit" onClick={()=>{
+                        onEmojiClick("❤️")
+                    }}>
+                    <Typography component={"span"} sx={{
+                        width:25,
+                        height:25,
+                        display:"flex",
+                        justifyContent:"center",
+                        alignItems:"center",
+                        fontSize:"1.4rem"
+                    }}
+                    >
+                        {"❤️"}
+                    </Typography>
+                </IconButton>
+            </Stack>
+        </Paper>
+    )
+}
+
 const StyledBadge = styled(Badge)(({ theme }) => ({
     '& .MuiBadge-badge': {
       backgroundColor: '#44b700',
@@ -155,11 +286,17 @@ const useStyles = ()=>({
 
 
 
-function BottomBar() {
+function BottomBar({user}) {
     const classes = useStyles()
     const [openMessBox,setOpenMessBox] = useState(false)
+    const [openIconBox,setOpenIconBox] = useState(false)
     const handleMessIconClick = () =>{
         setOpenMessBox(state => !state)
+        setOpenIconBox(false)
+    }
+    const handleIconClick = () =>{
+        setOpenMessBox(false)
+        setOpenIconBox(state => !state)
     }
     return (
         <Paper sx={classes.root} elevation={3}>
@@ -169,7 +306,9 @@ function BottomBar() {
                     anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
                     variant="dot"
                 >
-                    <Avatar sx ={classes.avatar}/>
+                    <Avatar
+                    src={ASP_APP_FOLDER + (user.avatar || "/public/users/u3.png")}
+                    sx ={classes.avatar}/>
                 </StyledBadge>
                 <Button color ="inherit" sx={classes.userBtn}>
                     <Typography 
@@ -177,7 +316,7 @@ function BottomBar() {
                         fontSize:12
                     }}
                     variant="body2" component="span">
-                        Nguyễn Văn Huy
+                        {user.name || "Loading..."}
                     </Typography>
                     <Typography 
                     sx ={{
@@ -194,12 +333,15 @@ function BottomBar() {
                 <IconButton color="inherit" onClick = {handleMessIconClick}>
                     <ChatBubbleOutlineRounded/>
                 </IconButton>
-                <IconButton color="inherit">
+                <IconButton color="inherit" onClick = {handleIconClick}>
                     <Mood/>
                 </IconButton>
             </Stack>
             {
                 openMessBox&&<MessageBox/>
+            }
+            {
+                openIconBox&&<IconsBox/>
             }
 
 

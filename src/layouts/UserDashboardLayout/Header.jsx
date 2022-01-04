@@ -12,7 +12,7 @@ import { logout } from "../../stores/actions/Auth";
 const headerMenu = [
     {
         name:'Dashboard/My Rooms',
-        href:'/',
+        href:'/myroom',
         img:'/assets/icons/gamer.png',
     },
     {
@@ -175,7 +175,13 @@ const Header = () => {
                     variant='h5'
                     sx={{
                         flexGrow: 1,
+                        color:"#fff",
+                        fontSize:22,
+                        fontWeight:600,
+                        textDecoration:"none"
                     }}
+                    component = {NavLink}
+                    to="/myroom"
                 >
                     Pixel Town
                 </Typography>
@@ -190,7 +196,7 @@ const Header = () => {
                     <CustomizedHeaderButton component={NavLink} to="/explore" 
                     style={({isActive})=>({backgroundColor: isActive?'#717CB470':"inherit"})}
                     variant='text'>Explore</CustomizedHeaderButton>
-                    <CustomizedHeaderButton component={NavLink} to="/" 
+                    <CustomizedHeaderButton component={NavLink} to="/myroom" 
                     style={({isActive})=>({backgroundColor: isActive?'#717CB470':"inherit"})}
                     variant="text" disableElevation>My Rooms</CustomizedHeaderButton>
                     <CustomizedHeaderButton component={NavLink} 
@@ -270,12 +276,15 @@ const Header = () => {
                     transformOrigin={{ horizontal: 'left', vertical: 'top' }}
                     anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
                 >
-                    <MenuItem component={Link} to="/me">
-                        <ListItemIcon>
-                            <AccountCircle fontSize="small" />
-                        </ListItemIcon>
-                        Account
-                    </MenuItem>
+                    {currentUser&&(
+                        <MenuItem component={Link} to="/profile">
+                            <ListItemIcon>
+                                <AccountCircle fontSize="small" />
+                            </ListItemIcon>
+                            Account
+                        </MenuItem>
+                    )}
+                    
                     <Divider />
                     <MenuItem>
                         <ListItemIcon>
@@ -341,7 +350,7 @@ const Header = () => {
                             <Typography>
                                 {currentUser.name}
                             </Typography>
-                            <Button component={Link} to='/me'>
+                            <Button component={Link} to='/profile'>
                                 My Account
                             </Button>
                         </Paper>

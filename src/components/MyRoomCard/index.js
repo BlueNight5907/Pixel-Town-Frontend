@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Button, Card, CardActions, CardMedia, CardHeader, Typography, Avatar, IconButton, Menu, MenuItem } from '@mui/material';
 import ShareIcon from '@mui/icons-material/Share';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
@@ -8,8 +8,18 @@ import RoomDetailsDialog from '../RoomDetailsDialog';
 import RoomDetails from '../RoomDetails';
 import PasswordFormDialog from '../InputRoomPass';
 import { userRoom } from '../../mockData/TestData';
+import { useSelector } from 'react-redux';
+import { getUser } from '../../api/userApi';
+import { ASP_APP_FOLDER } from '../../constants/config';
+import { Link } from 'react-router-dom';
 
 const MyRoomCard = (props) => {
+    const { description,roomName, hostId, desImg, maxUser , Id, password, userJoinRoom} = props;
+    const {currentUser} = useSelector(state => state.authReducer)
+    const [hostInfor, setHostInfor] = useState({
+        hostName:"Loading"
+    })
+    const [numberUser,setNumberUser] = React.useState(0);
     // handle Share button
     const [anchorEl, setAnchorEl] = React.useState(null);
     const handleShare_Open = (event) => {
@@ -19,9 +29,41 @@ const MyRoomCard = (props) => {
         setAnchorEl(null);
     };
 
+    useEffect(()=>{
+        let hasUser = false;
+        let length = userJoinRoom?.length
+        for(let i = 0;i < length ;i++){
+            if(userJoinRoom[i].userId === currentUser.id){
+                hasUser = true
+                break
+            }
+        }
+        if(hasUser){
+            setNumberUser(length)
+        }
+        else{
+            setNumberUser(length + 1)
+        }
+    },[userJoinRoom])
+
+    useEffect(() => {
+        let isFetching = true
+        async function fetching(){
+            const {data} = await getUser(hostId)
+            if(isFetching){
+                data&&setHostInfor({
+                    hostName:data.name
+                })
+            }
+        }
+        fetching()
+        return () => {
+            isFetching = false
+        }
+    }, [hostId])
+
     // for details dialog
     const [openDialog, setOpenDialog] = React.useState(false);
-    const { avtSrc, roomName, hostName, desImg, currentUser, maxUser } = props;
 
     const classes = useStyles();
     return (
@@ -78,15 +120,14 @@ const MyRoomCard = (props) => {
                 sx={classes.cardAction}
             >
                 <Typography variant='subtitle2'>
-                    <Circle /> {currentUser}/{maxUser}
+                    <Circle /> {numberUser}/{maxUser}
                 </Typography>
                 <Button
                     sx={classes.button}
                     disableElevation
                     size='medium'
-                    onClick={() => {
-                        console.log('click');
-                    }}>
+                    component={Link}
+                    to={`/room/join/${Id}`}>
                     Join room
                 </Button>
                 <IconButton
@@ -100,8 +141,9 @@ const MyRoomCard = (props) => {
                 openDialog={openDialog}
                 setOpenDialog={setOpenDialog}
                 title={roomName}
+                to={`/room/join/${Id}`}
             >
-                <RoomDetails hostName={userRoom.hostName} roomID={userRoom.roomID} images={userRoom.images} description={userRoom.description} />
+                <RoomDetails hostName={hostInfor.hostName} roomID={Id} images={userRoom.images} description={description} />
             </RoomDetailsDialog>
         </Card>
     );

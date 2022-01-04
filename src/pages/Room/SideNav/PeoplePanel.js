@@ -109,7 +109,6 @@ const useStyles =(owner)=>({
 function User({edited,data,...other}){
     const {name, userImg, userId,state,owner} = data
     const classes = useStyles(owner)
-    console.log(state)
     const styles = {
         width:"8px",
         height:"8px",
@@ -120,7 +119,7 @@ function User({edited,data,...other}){
     return(
         <Grid container sx={classes.user} alignItems="center">
             <Avatar
-            src={ASP_APP_FOLDER + userImg || "/public/users/u29.jfif"}
+            src={ASP_APP_FOLDER + (userImg ||  "/public/users/u29.jfif")}
             sx={classes.avt}/>
             <Stack flexDirection="column" className="infor" gap={0.1}>
                 <Typography className="user-name">

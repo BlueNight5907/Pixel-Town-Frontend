@@ -177,7 +177,7 @@ function SideNav({minDrawWidth = 0,drawWidth,active,handleActive}) {
                         </SidebarButton>
                         <SidebarButton title="Settings" onClick={()=> {
                           handleActive(true)
-                          setActiveTab(1)
+                          setActiveTab(2)
                         }}>
                             <Settings/>
                         </SidebarButton>
@@ -196,7 +196,7 @@ function SideNav({minDrawWidth = 0,drawWidth,active,handleActive}) {
                      activeTab===0&&<PeoplePanel close={()=> handleActive(false)}/>
                    }
                    {
-                     activeTab===1&&<FilePanel close={()=> handleActive(false)}/>
+                     activeTab===1&&<FilePanel close={()=> handleActive(false)} activeTab={activeTab}/>
                    }
                    {
                      activeTab===3&&<ChatPanel close={()=> handleActive(false)}/>

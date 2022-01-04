@@ -1,5 +1,5 @@
-import { getMessagesApi, joinRoomApi, userInRoomApi } from "../../api/roomApi"
-import { GET_MESSAGES_FAILED, GET_MESSAGES_REQUEST,GET_MESSAGES_SUCCESS, GET_USERS_IN_ROOM_FAILED, GET_USERS_IN_ROOM_REQUEST, GET_USERS_IN_ROOM_SUCCESS, JOIN_ROOM_FAILED, JOIN_ROOM_REQUEST, JOIN_ROOM_SUCCESS, SET_READY_TO_JOIN } from "../types/JoinRoom"
+import { getFilesApi, getFilesLastApi, getMessagesApi, joinRoomApi, userInRoomApi } from "../../api/roomApi"
+import { GET_FILES_FAILED, GET_FILES_LAST_SUCCESS, GET_FILES_REQUEST, GET_FILES_SUCCESS, GET_MESSAGES_FAILED, GET_MESSAGES_REQUEST,GET_MESSAGES_SUCCESS, GET_USERS_IN_ROOM_FAILED, GET_USERS_IN_ROOM_REQUEST, GET_USERS_IN_ROOM_SUCCESS, JOIN_ROOM_FAILED, JOIN_ROOM_REQUEST, JOIN_ROOM_SUCCESS, SET_READY_TO_JOIN } from "../types/JoinRoom"
 
 export const joinRoom = (roomId,CharacterID)=>{
     return async(dispatch, getState)=>{
@@ -123,6 +123,66 @@ export const getMessages = (roomId,time)=>{
             setTimeout(() => {
                 dispatch({
                 type: GET_MESSAGES_FAILED,
+                payload: {
+                    error: error.response?.data ? error.response.data.value : error.message,
+                },
+              });
+            }, 1000);
+        }
+    }
+}
+
+export const getfiles = (roomId,time)=>{
+    return async(dispatch, getState)=>{
+        //loading get myroom
+        dispatch({type:GET_FILES_REQUEST})
+        try{
+            const {data} = await getFilesApi(roomId,time)
+
+            setTimeout(() => {
+                dispatch({
+                    type:GET_FILES_SUCCESS,
+                    payload:{
+                        data:data.value.reverse()
+                    }
+                })
+            }, 1000);
+        }
+        catch(error){
+            console.log(error.response?.data ? error.response.data : error.message)
+            setTimeout(() => {
+                dispatch({
+                type: GET_FILES_FAILED,
+                payload: {
+                    error: error.response?.data ? error.response.data.value : error.message,
+                },
+              });
+            }, 1000);
+        }
+    }
+}
+
+export const getfilesLast = (roomId,time)=>{
+    return async(dispatch, getState)=>{
+        //loading get myroom
+        dispatch({type:GET_FILES_REQUEST})
+        try{
+            const {data} = await getFilesLastApi(roomId,time)
+
+            setTimeout(() => {
+                dispatch({
+                    type:GET_FILES_LAST_SUCCESS,
+                    payload:{
+                        data:data.value.reverse()
+                    }
+                })
+            }, 1000);
+        }
+        catch(error){
+            console.log(error.response?.data ? error.response.data : error.message)
+            setTimeout(() => {
+                dispatch({
+                type: GET_FILES_FAILED,
                 payload: {
                     error: error.response?.data ? error.response.data.value : error.message,
                 },

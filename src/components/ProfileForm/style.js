@@ -42,10 +42,25 @@ export const useStyles = () => ({
     saveButton: {
         borderRadius: '50px',
         marginTop: '10px',
+        paddingLeft:"30px",
+        paddingRight:"30px"
     },
     displayForm: {
         display: 'flex',
         flexDirection: 'column',
-        alignItems: 'center'
+        alignItems: 'center',
+        gap:2,
+        paddingTop:{xs:0,md:4}
     },
+    txtField:{
+        "& label, & input":{
+            color:"#fff"
+        },
+        "& > div:before":{
+            borderColor:"#fff"
+        },
+        "&:hover > div:before, &:hover label":{
+            borderColor:theme => theme.main.btnColor+"!important"
+        }
+    }
 });

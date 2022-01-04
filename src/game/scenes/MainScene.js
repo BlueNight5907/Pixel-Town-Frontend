@@ -32,6 +32,11 @@ export default class MainScene extends Phaser.Scene{
 
     create(){
 
+        //set audio
+        const audio = this.sound.add("cafe")
+        audio.setVolume(0.1)
+        audio.loop = true
+        audio.play()
         //Create map
         const map = this.make.tilemap({key:"map"})
         const tileset = map.addTilesetImage("atlas_32x","tiles")

@@ -72,7 +72,7 @@ const SearchBar = styled('div')(({ theme }) => ({
     },
 }));
 
-const pathMap = {"/":"/room/myroom","/explore":"/room"}
+const pathMap = {"/":"/room/myroom","/explore":"/room","/myroom":"/room/myroom"}
 const UserDashboard = () => {
     const {pathname} = useLocation()
     const dispatch = useDispatch()
@@ -81,7 +81,7 @@ const UserDashboard = () => {
     const [rooms, setRooms] = useState([])
     console.log(worldRooms)
     useEffect(()=>{
-        if(pathname === "/"){
+        if(pathname === "/" || pathname === "/myroom"){
             setSelected(0)
             console.log("fetch myroom")
             dispatch(getUserRooms(pathMap[pathname]))
@@ -115,7 +115,7 @@ const UserDashboard = () => {
 
     return (
         <Fragment>
-            {pathname === "/"?(<Box sx={{
+            {pathname === "/"  || pathname === "/myroom"?(<Box sx={{
                 width:"100%",
                 marginBottom:"24px",
                 display:"flex",

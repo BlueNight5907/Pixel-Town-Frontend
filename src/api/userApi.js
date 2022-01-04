@@ -30,3 +30,17 @@ export const registerApi = (formData) => {
         'Content-Type': `multipart/form-data; boundary=${form._boundary}`
     }})
 }
+
+export const getUserByToken = ()=>{
+    return axiosClient.get("/account/token")
+}
+export const updateAccountApi = (form)=>{
+    const path = "/account"
+    return axiosClient.put(path, form, {headers:{
+        'Content-Type': `multipart/form-data; boundary=${form._boundary}`
+    }})
+}
+export const changePassApi = (data) =>{
+    const path = "/account/changepassword"
+    return axiosClient.put(path,data)
+}

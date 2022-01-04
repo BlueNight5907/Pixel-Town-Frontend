@@ -1,5 +1,5 @@
-import {LOGIN_REQUEST, LOGIN_SUCCESS, LOGIN_FAIL, LOGOUT, REGISTER_REQUEST, REGISTER_FAIL, REGISTER_SUCCESS} from "../types/Auth"
-import { loginApi, logoutApi, registerApi } from "../../api/userApi"
+import {LOGIN_REQUEST, LOGIN_SUCCESS, LOGIN_FAIL, LOGOUT, REGISTER_REQUEST, REGISTER_FAIL, REGISTER_SUCCESS, GET_USER_REQUEST, GET_USER_FAIL, GET_USER_SUCCESS, UPDATE_USER_REQUEST, UPDATE_USER_SUCCESS, UPDATE_USER_FAIL} from "../types/Auth"
+import { getUserByToken, loginApi, logoutApi, registerApi, updateAccountApi } from "../../api/userApi"
 
 export const login = (form) => {
     return async (dispatch, getState) => {
@@ -103,5 +103,78 @@ export const register = (form) => {
           }, 1500);
           
         }
+  }
+}
+
+export const getUser = ()=>{
+  return async (dispatch,getState) => {
+    //Vao trạng thái chờ đăng nhập
+    dispatch({
+      type:GET_USER_REQUEST
+    })
+    try{
+      const {currentUser} = getState().authReducer;
+      const {data} = await getUserByToken()
+      let birthday = data.birthday.split("T")[0]
+      const user = {
+        ...currentUser,
+        ...data,
+        birthday
+      }
+      localStorage.setItem(
+        "user",
+        JSON.stringify(user)
+      );
+      setTimeout(() => {
+        dispatch({
+          type: GET_USER_SUCCESS,
+          payload: {
+            data: user,
+          },
+        });
+      }, 1000);
+
+  } catch (error) {
+      console.log(error.response?.data ? error.response.data : error.message)
+      setTimeout(() => {
+        dispatch({
+          type: GET_USER_FAIL,
+          payload: {
+            error: error.response?.data ? error.response.data.value : error.message,
+          },
+        });
+      }, 1500);
+      
+    }
+  }
+}
+
+export const updateUser = (form)=>{
+  return async (dispatch,getState) => {
+    //Vao trạng thái chờ đăng nhập
+    dispatch({
+      type:UPDATE_USER_REQUEST
+    })
+    try{
+      await updateAccountApi(form);
+      setTimeout(() => {
+        dispatch({
+          type: UPDATE_USER_SUCCESS,
+          payload: {},
+        });
+      }, 1000);
+
+  } catch (error) {
+      console.log(error.response?.data ? error.response.data : error.message)
+      setTimeout(() => {
+        dispatch({
+          type: UPDATE_USER_FAIL,
+          payload: {
+            error: error.response?.data ? error.response.data.value : error.message,
+          },
+        });
+      }, 1500);
+      
+    }
   }
 }

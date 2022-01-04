@@ -1,6 +1,8 @@
 import { Paper,Stack, IconButton, Avatar } from '@mui/material'
 import React, { useState } from 'react'
 import {MicOffRounded, MicRounded, Videocam, VideocamOff} from '@mui/icons-material'
+import { useSelector } from 'react-redux'
+import {ASP_APP_FOLDER} from "../../../constants/config"
 const useStyles = ()=>({
     root:{
         border:theme => '1px solid '+theme.main.bgColor,
@@ -50,6 +52,7 @@ const useStyles = ()=>({
 })
 
 function SmallScreen() {
+    const {currentUser} = useSelector(state => state.authReducer)
     const [micActive,setMicActive] = useState(true)
     const [camActive,setCamActive] = useState(true)
     const classes = useStyles()
@@ -83,7 +86,11 @@ function SmallScreen() {
                     </IconButton>
                 </Stack>
 
-                <Avatar sx = {classes.avt}/>
+                {!camActive&&(
+                    <Avatar sx = {classes.avt}
+                    src={ASP_APP_FOLDER + currentUser.avatar || "/public/users/u3.png"}
+                    />
+                )}
             </div>
         </Paper>
     )

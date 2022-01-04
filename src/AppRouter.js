@@ -1,13 +1,11 @@
 import React from 'react'
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import Room from './pages/Room';
-import CreateRoom2 from './pages/CreateRoom2';
 import CreateRoom from './pages/CreateRoom';
 import UserDashboard from './pages/UserDashboard';
 import Auth from './pages/Auth';
 import RoomLayout from './pages/Room/RoomLayout';
 import UserDashboardLayout from "./layouts/UserDashboardLayout"
-import MyRoom from './pages/MyRoom';
 import JoinRoom from './pages/JoinRoom';
 import Profile from './pages/Profile';
 function AppRouter() {
@@ -23,14 +21,10 @@ function AppRouter() {
                     </UserDashboardLayout>
                 } />
 
-                <Route path="/" element={
-                    <UserDashboardLayout>
-                        <UserDashboard />
-                    </UserDashboardLayout>
-                } />
+                <Route path="/" element={<Navigate to="/myroom" />}/>
                 <Route path={"/myroom"} element={
                     <UserDashboardLayout>
-                        <MyRoom /> 
+                        <UserDashboard /> 
                     </UserDashboardLayout>
                 } />
 
@@ -41,9 +35,8 @@ function AppRouter() {
                 } />
                 <Route path='/room/create' element={<CreateRoom />} />
                 <Route path='/room' element={< RoomLayout />}>
-                    <Route path='/room/join' element={<Navigate to="/" />} />
+                    <Route path='/room/join' element={<Navigate to="/myroom" />} />
                     <Route path='/room/join/:roomId' element={<JoinRoom />} />
-                    <Route path='/room/create2' element={<CreateRoom2 />} />
                     <Route path=":roomId" element={<Room />} />
                 </Route>
             </Routes>

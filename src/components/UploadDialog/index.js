@@ -57,7 +57,9 @@ function UploadDialog({open,handleClose,onFileChange,...other}) {
             const reader = new FileReader();
             reader.onload = function(){
             const result = reader.result;
-            img.current.src = result;
+            if(result.match(/.(jpg|jpeg|png|gif|jfif|svg)$/i)){
+              img.current.src = result;
+            }
             wrapper.current.classList.add("active");
             }
             reader.readAsDataURL(file);

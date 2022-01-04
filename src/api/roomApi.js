@@ -28,7 +28,30 @@ export const getMessagesApi = (roomId, time) => {
     return axiosClient.get(path)
 }
 
+export const getFilesApi = (roomId, time) => {
+    const path = `/files/${roomId}/${time}`
+    return axiosClient.get(path)
+}
+
+export const getFilesLastApi = (roomId,time) => {
+    const path = `/files/last/${roomId}/${time}`
+    return axiosClient.get(path)
+}
+
 export const userInRoomApi = (roomId) => {
     const path = "/room/people/"+roomId
     return axiosClient.get(path)
+}
+
+export const uploadFileApi = (roomId,form,onProgressChange) => {
+    const path = "/files/"+roomId
+    return axiosClient.post(path,form, {
+        headers:{
+        'Content-Type': `multipart/form-data; boundary=${form._boundary}`
+        },
+        onUploadProgress: (progressEvent) =>{
+            const { loaded, total } = progressEvent;
+            onProgressChange(loaded,total)
+        }
+    })
 }

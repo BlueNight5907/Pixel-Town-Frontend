@@ -47,7 +47,7 @@ function Room() {
             <Section className = "room" drawerWidth={drawerWidth}>
                 <Game signalR={signalR} data={data} dispatch={dispatch}/>
                 <SmallScreen/>
-                <BottomBar/>
+                <BottomBar user = {currentUser}/>
             </Section>
         </Fragment>
     )

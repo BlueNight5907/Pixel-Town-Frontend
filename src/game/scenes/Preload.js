@@ -32,6 +32,7 @@ export default class Preload extends Phaser.Scene{
         this.data = data;
     }
     preload(){
+        //load character
         this.load.atlas(wendy.name, wendy.png, wendy.json);
         this.load.atlas(vision.name,vision.png, vision.json);
         this.load.atlas(storm.name, storm.png, storm.json);
@@ -54,6 +55,9 @@ export default class Preload extends Phaser.Scene{
         this.load.atlas(lisa.name,lisa.png, lisa.json);
         this.load.atlas(nat.name,nat.png, nat.json);
         this.load.atlas(john.name,john.png, john.json);
+
+        //load sounds
+        this.load.audio("cafe", "http://localhost:3000/assets/sounds/kiss_the_rain.mp3")
     }
     create(){
         const {signalR,dispatch, data} = this.data
