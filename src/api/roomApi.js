@@ -12,12 +12,27 @@ export const createRoomApi = (formData)=>{
     Object.keys(formData).forEach(key => {
         form.append(key,formData[key])
     })
-    console.log(form)
     const path = "/room"
     return axiosClient.post(path,form, {headers:{
         'Content-Type': `multipart/form-data; boundary=${form._boundary}`
     }})
 }
+export const deleteRoomApi = (roomId) => {
+    const path = `/room/${roomId}`
+    return axiosClient.delete(path)
+}
+
+export const updateRoomApi = (roomId,formData)=>{
+    const form = new FormData();
+    Object.keys(formData).forEach(key => {
+        form.append(key,formData[key])
+    })
+    const path = "/room/"+roomId
+    return axiosClient.put(path,form, {headers:{
+        'Content-Type': `multipart/form-data; boundary=${form._boundary}`
+    }})
+}
+
 export const joinRoomApi = (roomId,CharacterID)=>{
     const path = "/room/"+roomId
     return axiosClient.post(BASE_URL+path,{CharacterID})

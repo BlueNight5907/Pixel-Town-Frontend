@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.5" tiledversion="1.7.2" orientation="orthogonal" renderorder="right-down" width="40" height="40" tilewidth="32" tileheight="32" infinite="0" nextlayerid="5" nextobjectid="277">
+<map version="1.5" tiledversion="1.7.2" orientation="orthogonal" renderorder="right-down" width="40" height="40" tilewidth="32" tileheight="32" infinite="0" nextlayerid="6" nextobjectid="280">
  <properties>
   <property name="edges" value="clamped"/>
  </properties>
@@ -3431,6 +3431,10 @@
 126,126,126,126,126,126,126,126,126,126,126,126,126,126,126,126,126,126,126,126,126,126,126,126,126,126,126,126,126,126,126,126,126,126,126,126,126,126,126,126
 </data>
  </layer>
+ <objectgroup id="5" name="PrivateRoom">
+  <object id="277" name="private2" x="759.398" y="975.94" width="311.278" height="168.421"/>
+  <object id="278" name="private1" x="275.188" y="867.669" width="327.82" height="109.774"/>
+ </objectgroup>
  <layer id="2" name="World" width="40" height="40">
   <data encoding="csv">
 169,170,193,194,0,0,0,0,0,0,0,0,0,0,0,0,0,0,361,362,363,364,365,366,367,368,369,193,194,169,170,193,194,169,170,193,194,169,170,193,

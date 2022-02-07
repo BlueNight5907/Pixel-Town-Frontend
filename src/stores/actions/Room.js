@@ -1,6 +1,6 @@
-import { getMyRooms, getWorldRooms } from "../../api/roomApi";
+import { deleteRoomApi, getMyRooms, getWorldRooms } from "../../api/roomApi";
 import { GET_MY_ROOMS_REQUEST, GET_MY_ROOMS_SUCCESS, GET_MY_ROOMS_FAILED,
-    GET_WORLD_ROOMS_REQUEST, GET_WORLD_ROOMS_SUCCESS,GET_WORLD_ROOMS_FAILED, CREATE_ROOM_REQUEST, CREATE_ROOM_SUCCESS, CREATE_ROOM_FAILED } from "../types/Room";
+    GET_WORLD_ROOMS_REQUEST, GET_WORLD_ROOMS_SUCCESS,GET_WORLD_ROOMS_FAILED, CREATE_ROOM_REQUEST, CREATE_ROOM_SUCCESS, CREATE_ROOM_FAILED, DELETE_ROOM_REQUEST, DELETE_ROOM_SUCCESS, DELETE_ROOM_FAILED } from "../types/Room";
 import {createRoomApi} from "../../api/roomApi"
 import { REMOVE_LOADING, SET_LOADING, SET_SMALL_NOTIFICATION } from "../types/Notification";
 export const getUserRooms = (path)=>{
@@ -170,6 +170,52 @@ export const createRoom = (formData)=>{
                 })
                 dispatch({
                 type: CREATE_ROOM_FAILED,
+                payload: {
+                    error: error.response?.data ? error.response.data.value : error.message,
+                },
+              });
+            }, 1000);
+        }
+    }
+}
+
+
+export const deleteRoom = (roomId)=>{
+    return async(dispatch)=>{
+
+        //loading get myroom
+        dispatch({type:DELETE_ROOM_REQUEST})
+        dispatch({
+            type:SET_LOADING
+        })
+        try{
+            const {data} = await deleteRoomApi(roomId);
+
+
+            
+            setTimeout(() => {
+                dispatch({
+                    type:REMOVE_LOADING
+                })
+                dispatch({
+                    type:DELETE_ROOM_SUCCESS
+                })
+                dispatch({
+                    type:SET_SMALL_NOTIFICATION,
+                    payload:{
+                        data:"Delete Room Successfully"
+                    }
+                })
+            }, 1000);
+        }
+        catch(error){
+            console.log(error.response?.data ? error.response.data : error.message)
+            setTimeout(() => {
+                dispatch({
+                    type:REMOVE_LOADING
+                })
+                dispatch({
+                type: DELETE_ROOM_FAILED,
                 payload: {
                     error: error.response?.data ? error.response.data.value : error.message,
                 },

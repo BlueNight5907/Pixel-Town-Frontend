@@ -20,6 +20,8 @@ export default class Player{
         signalR.on("MyShortMessage", data =>{
             this.addChatBox(data.message)
         })
+
+        
     }
 
     addChatBox(message){
@@ -29,7 +31,9 @@ export default class Player{
     addCollider(object,callback = null){
         this.character.addCollider(object,callback)
     }
-
+    addOverlap(object,callback = null){
+        this.character.addOverlap(object, callback)
+    }
     update(){
 
         const speed = 140;

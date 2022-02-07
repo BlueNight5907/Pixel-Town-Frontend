@@ -3,7 +3,7 @@ import gameConfig from './gameConfig'
 import Phaser from "phaser"
 import MainScene from './scenes/MainScene'
 import Preload from './scenes/Preload';
-
+import SecondScene from "./scenes/SecondScene"
 function resize(game,container){
   if(!container) return;
   const size = {        
@@ -27,7 +27,7 @@ export default class Game extends React.Component {
       const config = {
         ...gameConfig,
         parent: this.gameContainer.current,
-        scene: [Preload,MainScene],
+        scene: [Preload,MainScene,SecondScene],
       };
       const game = new Phaser.Game(config);
       this.doResize = ()=> resize(game,this.gameContainer.current)
@@ -42,7 +42,7 @@ export default class Game extends React.Component {
       const config = {
         ...gameConfig,
         parent: this.gameContainer.current,
-        scene: [Preload,MainScene],
+        scene: [Preload,MainScene,SecondScene],
       };
       const game = new Phaser.Game(config);
       this.doResize = ()=> resize(game,this.gameContainer.current)

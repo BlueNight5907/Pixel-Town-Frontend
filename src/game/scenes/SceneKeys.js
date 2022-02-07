@@ -1,4 +1,6 @@
 const MainScene = "MainScene"
+const SecondScene = "SecondScene"
 export {
-    MainScene
+    MainScene,
+    SecondScene
 }

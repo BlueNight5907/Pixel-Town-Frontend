@@ -5,6 +5,7 @@ export default class MainScene extends Phaser.Scene{
     constructor(){
         super('MainScene');
         this.paddleRightVelocity = new Phaser.Math.Vector2(0,0)
+        this.privateRoom = []
     }
     init({signalR, char, data,dispatch}){
         this.signalR = signalR
@@ -51,14 +52,12 @@ export default class MainScene extends Phaser.Scene{
         const abovePlayer = map.createLayer("AbovePlayer", tileset, 0, 0);
         abovePlayer.setDepth(7)
         //Add collides
-        worldLayer.setCollisionByProperty({ collides: true });
-        wall.setCollisionByProperty({ collides: true });
+        worldLayer.setCollisionByProperty({ collide: true });
+        wall.setCollisionByProperty({ collide: true });
         
 
-        
+        //add player spawn point
         const spawnPoint = map.findObject("Objects", obj => obj.name === "SpawnPoint");
-        
-        
 
         const player = new Player(this,spawnPoint.x,spawnPoint.y,this.char.name,this.data.name,this.signalR,this.data.roomInfor);
         player.addCollider(worldLayer);
@@ -67,6 +66,26 @@ export default class MainScene extends Phaser.Scene{
         this.playerBody = player.character.self;
         this.player = player;
 
+        
+        
+        // Extract PrivateRoom from the object layer
+		const privateRoomLayer = map.getObjectLayer('PrivateRoom');
+        console.log(privateRoomLayer)
+        // Convert object layer objects to Phaser game objects
+        if(privateRoomLayer && privateRoomLayer.objects){
+			privateRoomLayer.objects.forEach(
+				(object) => {
+					let tmp = this.add.rectangle((object.x+(object.width/2)), (object.y+(object.height/2)), object.width, object.height);
+					tmp.properties = object
+					this.physics.world.enable(tmp, 1);
+					this.player.addOverlap(tmp, this.enterRoom)
+                    this.privateRoom.push(tmp)
+				}
+			);
+		}
+
+        
+
         this.groupPlayer = new GroupPlayers(this,spawnPoint, this.signalR,this.dispatch, this.data.roomInfor);
         const camera = this.cameras.main;
         camera.startFollow(this.playerBody);
@@ -74,9 +93,33 @@ export default class MainScene extends Phaser.Scene{
         
         
     }
+
+    enterRoom(player, room){
+		if(!player.inRoom){
+            console.log("Player in Room: "+room.properties.name)
+            player.inRoom = room
+            console.log(player?.body.touching)
+        }
+	}
+
     update() {
         this.player.update()
         this.groupPlayer.update()
+        this.privateRoom.forEach(room =>{
+            if(this.player.character?.self?.inRoom){
+                if(this.player.character?.self?.inRoom === room  && !(this.checkOverlap(this.player.character.self,room).length > 0)){
+                    //console.log("Player out Room: "+room.properties.name)
+                    console.log(this.checkOverlap(this.player.character.self,room))
+                    this.player.character.self.inRoom = null
+                }
+            }
+        })
+    }
+
+    checkOverlap(object1, object2){
+        let bounds1 = object1.getBounds();
+        let bounds2 = object2.getBounds();
+        return Phaser.Geom.Intersects.GetRectangleToRectangle(bounds1, bounds2)
     }
 
 

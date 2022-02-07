@@ -36,12 +36,22 @@ const joinRoomReducer = (state = initialState, action) => {
                 loadingFile:false,
                 files:[...payload.data,...state.files]
             }
-        case GET_FILES_LAST_SUCCESS:
+        case GET_FILES_LAST_SUCCESS:{
+            let lastfile = payload.data&&payload.data[0];
+            if(!lastfile){
+                return state
+            }
+            for(let i = 0; i<state.files.length;i++){
+                if(state.files[i].id === lastfile.id){
+                    return state
+                }
+            }
             return {
                 ...state,
                 loadingFile:false,
                 files:[...state.files,...payload.data]
             }
+        }
         case GET_FILES_FAILED:
             return {
                 ...state,

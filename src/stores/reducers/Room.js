@@ -69,7 +69,6 @@ const roomReducer = (state = initialState, action) => {
       return {
         ...state,
         loadingDeleteRoom:false,
-        myRooms: payload.data
       }
     case DELETE_ROOM_FAILED:
       return {

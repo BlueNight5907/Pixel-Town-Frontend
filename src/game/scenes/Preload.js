@@ -1,5 +1,5 @@
 import Phaser from "phaser";
-import {MainScene} from "./SceneKeys";
+import {MainScene, SecondScene} from "./SceneKeys";
 import { 
     wendy,
     vision,
@@ -63,7 +63,18 @@ export default class Preload extends Phaser.Scene{
         const {signalR,dispatch, data} = this.data
         const character = getCharacter(data.character)
         signalR.on("joined", (roomInfor)=>{
-            this.scene.start(MainScene,{
+            const {mapId} = data;
+            let Scene = MainScene;
+            switch(mapId){
+                case 1:{
+                    Scene = MainScene;
+                    break;
+                }
+                default:{
+                    Scene = SecondScene;
+                }
+            }
+            this.scene.start(Scene,{
                 signalR:signalR,
                 dispatch:dispatch,
                 char:character,

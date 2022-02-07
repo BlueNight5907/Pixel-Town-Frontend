@@ -43,7 +43,7 @@ export default class Character {
         
         this.scene.physics.world.enable(this.self);
     
-        
+        console.log("Player")
         
     }
 
@@ -85,10 +85,16 @@ export default class Character {
             this.destroyTimeout = null;
         }
     }
-    
+
     addCollider(object,callback){
         this.scene.physics.add.collider(this.self,object,callback)
     }
+
+    addOverlap(object, callback){
+        this.scene.physics.add.overlap(this.self,object, callback, null, this.scene)
+    }
+
+
     createCharAnims(anims){
         //walk left
         anims.create({

@@ -2,19 +2,20 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import App from './App';
 import './styles/normalize.css';
-import theme from './themes';
-import {CssBaseline, ThemeProvider} from '@mui/material';
 import { Provider } from "react-redux";
+import { HelmetProvider } from 'react-helmet-async';
 import store from "./stores"
-
+import {BrowserRouter as Router} from "react-router-dom";
 ReactDOM.render(
   <React.StrictMode>
-    <Provider store={store}>
-      <ThemeProvider theme={theme}>
-        <CssBaseline/>
-        <App/>
-      </ThemeProvider>
-    </Provider>
+      <HelmetProvider>
+          <Provider store={store}>
+              <Router>
+                  <App/>
+              </Router>
+          </Provider>
+      </HelmetProvider>
+
   </React.StrictMode>,
   document.getElementById('root')
 );

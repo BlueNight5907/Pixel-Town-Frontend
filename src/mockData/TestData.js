@@ -21,7 +21,7 @@ export const templates = [
         type: 'Office',
         templateRooms: [
             {
-                tid:2,
+                tid:1,
                 name:'Office 1',
                 src:'https://i.pinimg.com/originals/e0/8d/cd/e08dcd4401a0015a31b593738031f5b0.png',
                 des:'Aenean lacinia bibendum nulla sed consectetur. Praesent commodo cursus magna. Donec sed odio dui. Donec ullamcorper nulla non metus auctor fringilla.',
